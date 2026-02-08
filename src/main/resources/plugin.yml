@@ -1,21 +1,22 @@
-name: RanCmd
-main: cc.ranmc.rancmd.Main
-description: '阿然定制24k纯钛合金超级无敌终终终终极版的指令插件'
+name: RanOnlineApi
+main: cc.ranmc.api.Main
+description: '阿然定制24k纯钛合金超级无敌终终终终极版的查询在线插件'
 website: https://www.ranmc.cc/
 author: Ranica
 api-version: "1.13"
-version: ${project.version}
+version: Release 1.1
+folia-supported: true
 
 permissions:
-  rancmd.user:
+  roa.user:
     default: true
     description: 'user only'
 
-  rancmd.admin:
+  roa.admin:
     default: op
     description: 'admin only'
 
 commands:
-  rancmd:
+  roa:
     description: rancmd
     usage: /<command>
