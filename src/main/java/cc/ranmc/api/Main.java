@@ -9,7 +9,11 @@ import io.javalin.http.ContentType;
 import io.javalin.http.Context;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.time.LocalDateTime;
@@ -31,10 +35,21 @@ public class Main extends JavaPlugin implements Listener {
         mainCmd.setExecutor(new MainCommand());
         mainCmd.setTabCompleter(new MainTabComplete());
 
+        Bukkit.getPluginManager().registerEvents(this, this);
+
         tps.put("code", 200);
         tps.put("data", new ArrayList<>());
         Bukkit.getServer().getScheduler().runTaskTimer(this, this::logTps, 0, 20 * 60 * 10);
         super.onEnable();
+    }
+
+    @EventHandler
+    public void onEntityPortal(EntityPortalEvent event) {
+        Entity entity = event.getEntity();
+        if (entity instanceof Item item) {
+            event.setCancelled(true);
+            item.remove();
+        }
     }
 
     public void logTps() {
