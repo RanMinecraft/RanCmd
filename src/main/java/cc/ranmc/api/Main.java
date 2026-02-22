@@ -19,6 +19,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import static cc.ranmc.api.util.FoliaUtil.isFolia;
+
 public class Main extends JavaPlugin implements Listener {
 
     private static JSONObject tps = new JSONObject();
@@ -39,7 +41,12 @@ public class Main extends JavaPlugin implements Listener {
 
         tps.put("code", 200);
         tps.put("data", new ArrayList<>());
-        Bukkit.getServer().getScheduler().runTaskTimer(this, this::logTps, 0, 20 * 60 * 10);
+        if (isFolia()) {
+            Bukkit.getServer().getGlobalRegionScheduler().runAtFixedRate(this,
+                    task -> logTps(), 0, 20 * 60 * 10);
+        } else {
+            Bukkit.getServer().getScheduler().runTaskTimer(this, this::logTps, 0, 20 * 60 * 10);
+        }
         super.onEnable();
     }
 
