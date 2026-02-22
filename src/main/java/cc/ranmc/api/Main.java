@@ -18,6 +18,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static cc.ranmc.api.util.FoliaUtil.isFolia;
 
@@ -35,7 +36,7 @@ public class Main extends JavaPlugin implements Listener {
 
         // 注册指令
         PluginCommand mainCmd = Bukkit.getPluginCommand("roa");
-        mainCmd.setExecutor(new MainCommand());
+        Objects.requireNonNull(mainCmd).setExecutor(new MainCommand());
         mainCmd.setTabCompleter(new MainTabComplete());
 
         Bukkit.getPluginManager().registerEvents(this, this);
