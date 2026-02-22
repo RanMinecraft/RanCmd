@@ -24,10 +24,11 @@ import static cc.ranmc.api.util.FoliaUtil.isFolia;
 public class Main extends JavaPlugin implements Listener {
 
     private static JSONObject tps = new JSONObject();
+    private static Javalin javalin;
 
     @Override
     public void onEnable() {
-        Javalin.create()
+        javalin = Javalin.create()
                 .get("/tps", this::getTps)
                 .get("/online", this::getOnline)
                 .start(2263);
@@ -48,6 +49,17 @@ public class Main extends JavaPlugin implements Listener {
             Bukkit.getServer().getScheduler().runTaskTimer(this, this::logTps, 0, 20 * 60 * 10);
         }
         super.onEnable();
+    }
+
+    @Override
+    public void onDisable() {
+        if (javalin != null) {
+            try {
+                javalin.stop();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @EventHandler
