@@ -45,7 +45,7 @@ public class Main extends JavaPlugin implements Listener {
         tps.put("data", new ArrayList<>());
         if (isFolia()) {
             Bukkit.getServer().getGlobalRegionScheduler().runAtFixedRate(this,
-                    task -> logTps(), 0, 20 * 60 * 10);
+                    task -> logTps(), 1, 20 * 60 * 10);
         } else {
             Bukkit.getServer().getScheduler().runTaskTimer(this, this::logTps, 0, 20 * 60 * 10);
         }
