@@ -2,6 +2,9 @@ package cc.ranmc.api.command;
 
 import cc.ranmc.api.Main;
 import cc.ranmc.api.util.BasicUtil;
+import com.bekvon.bukkit.residence.Residence;
+import com.bekvon.bukkit.residence.api.ResidenceApi;
+import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -131,6 +134,13 @@ public class AdCommand implements CommandExecutor {
             }
             LocalDateTime dt = LocalDateTime.now();
             LocalDateTime endtime = dt.plusDays(7);
+
+            ClaimedResidence residence = ResidenceApi.getResidenceManager().getByName(args[0]);
+            if (residence == null) {
+                sender.sendMessage(color("&c该领地不存在"));
+                return true;
+            }
+
             adlist.add(args[0]+" "+player.getName()+" "+args[1]+" "+
                     endtime.getYear()+"-"+endtime.getMonthValue()+"-"+endtime.getDayOfMonth());
             plugin.getConfig().set("ad-list", adlist);
