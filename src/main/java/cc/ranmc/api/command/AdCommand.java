@@ -119,7 +119,8 @@ public class AdCommand implements CommandExecutor {
         } else {
             // 创建宣传栏
             Economy econ = Main.getEcon();
-            if (econ.getBalance(player) < plugin.getConfig().getDouble("CreateWarpPrice")) {
+            int price = plugin.getConfig().getInt("ad-price");
+            if (econ.getBalance(player) < price) {
                 sender.sendMessage(color("&c你的金券不足"));
                 return true;
             }
@@ -134,7 +135,7 @@ public class AdCommand implements CommandExecutor {
                     endtime.getYear()+"-"+endtime.getMonthValue()+"-"+endtime.getDayOfMonth());
             plugin.getConfig().set("ad-list", adlist);
             plugin.saveConfig();
-            econ.withdrawPlayer(player, plugin.getConfig().getInt("ad-price", 2000));
+            econ.withdrawPlayer(player, price);
             sender.sendMessage(color("&a创建成功,快打开宣传栏查看吧"));
         }
         return true;
