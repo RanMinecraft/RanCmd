@@ -1,5 +1,6 @@
 package cc.ranmc.api.command;
 
+import cc.ranmc.api.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -23,6 +24,12 @@ public class MainCommand implements CommandExecutor {
 
         if (!sender.hasPermission("roa.admin")) {
             sender.sendMessage(color("&a没有权限"));
+            return true;
+        }
+
+        if (args.length == 0) {
+            Main.getInstance().reloadConfig();
+            sender.sendMessage(color("&a插件重载成功"));
             return true;
         }
         
