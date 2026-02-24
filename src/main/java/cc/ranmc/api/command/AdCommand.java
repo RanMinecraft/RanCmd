@@ -53,7 +53,7 @@ public class AdCommand implements CommandExecutor {
             LocalDate dt = LocalDate.now();
             List<String> outdatedList = plugin.getConfig().getStringList("ad-list");
             for (String string : outdatedList) {
-                String[] endtime = string.split(" ")[3].split(",");
+                String[] endtime = string.split(" ")[3].split("-");
                 if (dt.getYear() < Integer.parseInt(endtime[0])) {
                     warpList.add(string);
                 } else if (dt.getYear() == Integer.parseInt(endtime[0]) && dt.getMonthValue() < Integer.parseInt(endtime[1])) {
@@ -130,7 +130,8 @@ public class AdCommand implements CommandExecutor {
             }
             LocalDateTime dt = LocalDateTime.now();
             LocalDateTime endtime = dt.plusDays(7);
-            adlist.add(args[0]+" "+player.getName()+" "+args[1]+" "+endtime.getYear()+","+endtime.getMonthValue()+","+endtime.getDayOfMonth());
+            adlist.add(args[0]+" "+player.getName()+" "+args[1]+" "+
+                    endtime.getYear()+"-"+endtime.getMonthValue()+"-"+endtime.getDayOfMonth());
             plugin.getConfig().set("ad-list", adlist);
             plugin.saveConfig();
             econ.withdrawPlayer(player, plugin.getConfig().getInt("ad-price", 2000));
