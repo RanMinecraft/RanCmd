@@ -52,36 +52,36 @@ public class AdCommand implements CommandExecutor {
 
         if (args.length == 0) {
             // 打开宣传栏
-            List<String> warpList = new ArrayList<>();
+            List<String> adList = new ArrayList<>();
             LocalDate dt = LocalDate.now();
             List<String> outdatedList = plugin.getConfig().getStringList("ad-list");
             for (String string : outdatedList) {
                 String[] endtime = string.split(" ")[3].split("-");
                 if (dt.getYear() < Integer.parseInt(endtime[0])) {
-                    warpList.add(string);
+                    adList.add(string);
                 } else if (dt.getYear() == Integer.parseInt(endtime[0]) && dt.getMonthValue() < Integer.parseInt(endtime[1])) {
-                    warpList.add(string);
+                    adList.add(string);
                 } else if (dt.getYear() == Integer.parseInt(endtime[0]) && dt.getMonthValue() == Integer.parseInt(endtime[1]) && dt.getDayOfMonth() < Integer.parseInt(endtime[2])) {
-                    warpList.add(string);
+                    adList.add(string);
                 }
             }
 
-            if (warpList.size()<outdatedList.size()) {
-                plugin.getConfig().set("ad-list", warpList);
+            if (adList.size()<outdatedList.size()) {
+                plugin.getConfig().set("ad-list", adList);
                 plugin.saveConfig();
             }
 
             //打开宣传栏
             int guisize = 9;
-            if(warpList.isEmpty()) {
-                warpList = new ArrayList<>();
-            } else if(warpList.size()>=36) {
+            if(adList.isEmpty()) {
+                adList = new ArrayList<>();
+            } else if(adList.size() >= 36) {
                 guisize = 45;
-            } else if(warpList.size()>=27) {
+            } else if(adList.size() >= 27) {
                 guisize = 36;
-            } else if(warpList.size()>=18) {
+            } else if(adList.size() >= 18) {
                 guisize = 27;
-            } else if(warpList.size()>=9) {
+            } else if(adList.size() >= 9) {
                 guisize = 18;
             }
             Inventory inv = Bukkit.createInventory(null, guisize, color("&b&l领地宣传栏"));
@@ -90,7 +90,7 @@ public class AdCommand implements CommandExecutor {
             ItemMeta meta10 = item10.getItemMeta();
             meta10.setDisplayName(color("&b宣传栏"));
             ArrayList<String> lore1 = new ArrayList<>();
-            lore1.add(color("&e/ad 领地 描述"));
+            lore1.add(color("&e/ad 领地 介绍"));
             lore1.add(color("&e花费" + plugin.getConfig().getInt("ad-price") + "金币/周"));
             lore1.add(color("&9发布你的领地和介绍"));
             lore1.add(color("&9让更多人了解和向往"));
@@ -101,8 +101,8 @@ public class AdCommand implements CommandExecutor {
 
             inv.setItem(0, item10);
 
-            for (int i = 0; i < warpList.size(); i++) {
-                String[] resinfo = warpList.get(i).split(" ");
+            for (int i = 0; i < adList.size(); i++) {
+                String[] resinfo = adList.get(i).split(" ");
                 ItemStack item = new ItemStack(Material.OAK_SIGN);
                 ItemMeta meta = item.getItemMeta();
                 meta.setDisplayName(color("&e领地：&c"+resinfo[0]));
@@ -110,7 +110,9 @@ public class AdCommand implements CommandExecutor {
                 lore2.add(color("&e发布者：&c"+resinfo[1]));
                 lore2.add(color("&e到期日：&c"+resinfo[3]));
                 lore2.add(color("&e介绍描述："));
-                lore2.add(color(resinfo[2]));
+                for (String line : resinfo[2].split("\\\\n")) {
+                    lore2.add(color(line));
+                }
                 lore2.add(color("&b点击传送至领地"));
                 meta.setLore(lore2);
                 item.setItemMeta(meta);
@@ -140,8 +142,11 @@ public class AdCommand implements CommandExecutor {
                 sender.sendMessage(color("&c该领地不存在"));
                 return true;
             }
-
-            adlist.add(args[0]+" "+player.getName()+" "+args[1]+" "+
+            if (args[1].length() > plugin.getConfig().getInt("ad-length", 16)) {
+                sender.sendMessage(color("&c介绍字数过长"));
+                return true;
+            }
+            adlist.add(args[0]+" " + player.getName() + " " + args[1] + " "+
                     endtime.getYear()+"-"+endtime.getMonthValue()+"-"+endtime.getDayOfMonth());
             plugin.getConfig().set("ad-list", adlist);
             plugin.saveConfig();
