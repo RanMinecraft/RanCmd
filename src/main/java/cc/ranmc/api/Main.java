@@ -14,16 +14,19 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -101,7 +104,23 @@ public class Main extends JavaPlugin implements Listener {
                 player.closeInventory();
             }
         }
+    }
 
+    @EventHandler
+    public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
+        if (event.isCancelled()) return;
+        if (event.getDamager() instanceof Creeper creeper &&
+                event.getEntity() instanceof Player player &&
+                getConfig().getBoolean("playerHead")) {
+            ItemStack item = player.getInventory().getHelmet();
+            if (item != null && item.getType() == Material.PLAYER_HEAD && creeper.isPowered()) {
+                SkullMeta meta = (SkullMeta) item.getItemMeta();
+                if (!Objects.requireNonNull(meta).hasOwner()) {
+                    meta.setOwningPlayer(player);
+                    item.setItemMeta(meta);
+                }
+            }
+        }
     }
 
     @Override
