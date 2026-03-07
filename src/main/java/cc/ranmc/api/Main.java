@@ -110,8 +110,7 @@ public class Main extends JavaPlugin implements Listener {
     public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
         if (event.isCancelled()) return;
         if (event.getDamager() instanceof Creeper creeper &&
-                event.getEntity() instanceof Player player &&
-                getConfig().getBoolean("playerHead")) {
+                event.getEntity() instanceof Player player) {
             ItemStack item = player.getInventory().getHelmet();
             if (item != null && item.getType() == Material.PLAYER_HEAD && creeper.isPowered()) {
                 SkullMeta meta = (SkullMeta) item.getItemMeta();
