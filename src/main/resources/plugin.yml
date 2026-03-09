@@ -4,7 +4,7 @@ description: '阿然定制24k纯钛合金超级无敌终终终终极版的查询
 website: https://www.ranmc.cc/
 author: Ranica
 api-version: "1.13"
-version: Release 2.1
+version: Release 2.2
 folia-supported: true
 
 
@@ -28,4 +28,8 @@ commands:
 
   ad:
     description: ad
+    usage: /<command>
+
+  vai:
+    description: vai
     usage: /<command>
