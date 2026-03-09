@@ -44,12 +44,6 @@ public class VaiCommand implements CommandExecutor {
             return true;
         }
 
-        // 以下指令不能在控制台输入
-        if (!(sender instanceof Player player)) {
-            BasicUtil.print(color("&c该指令不能在控制台输入"));
-            return true;
-        }
-
         sender.sendMessage(color("&e修复村民 AI 开始运行"));
         Bukkit.getWorlds().forEach(world -> {
             for (Entity entity : world.getEntities()) {
