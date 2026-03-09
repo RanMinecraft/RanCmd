@@ -41,7 +41,7 @@ public class VaiCommand implements CommandExecutor {
                     }
                 }, ()->{});
             }
-            sender.sendMessage(color("&a成功修复村民 AI :" + count + "个"));
+            sender.sendMessage(color("&a成功修复村民 AI : " + count + "个"));
         });
         return true;
     }
