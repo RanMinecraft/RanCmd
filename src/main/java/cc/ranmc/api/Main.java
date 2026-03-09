@@ -4,6 +4,7 @@ import cc.ranmc.api.command.AdCommand;
 import cc.ranmc.api.command.AdTabComplete;
 import cc.ranmc.api.command.MainCommand;
 import cc.ranmc.api.command.MainTabComplete;
+import cc.ranmc.api.command.VaiCommand;
 import cc.ranmc.api.util.BasicUtil;
 import com.alibaba.fastjson2.JSONObject;
 import io.javalin.Javalin;
@@ -73,6 +74,9 @@ public class Main extends JavaPlugin implements Listener {
         PluginCommand adCmd = Bukkit.getPluginCommand("ad");
         Objects.requireNonNull(adCmd).setExecutor(new AdCommand());
         adCmd.setTabCompleter(new AdTabComplete());
+
+        PluginCommand vaiCmd = Bukkit.getPluginCommand("vai");
+        Objects.requireNonNull(vaiCmd).setExecutor(new VaiCommand());
 
         Bukkit.getPluginManager().registerEvents(this, this);
 
