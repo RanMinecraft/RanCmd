@@ -50,6 +50,7 @@ public class VaiCommand implements CommandExecutor {
             return true;
         }
 
+        sender.sendMessage(color("&e修复村民 AI 开始运行"));
         Bukkit.getWorlds().forEach(world -> {
             for (Entity entity : world.getEntities()) {
                 entity.getScheduler().run(Main.getInstance(), task -> {
@@ -57,10 +58,9 @@ public class VaiCommand implements CommandExecutor {
                         villager.setAI(true);
                     }
                 }, ()->{});
+                sender.sendMessage(color("&a修复村民 AI 成功"));
             }
         });
-        sender.sendMessage(color("&a创建成功,快打开宣传栏查看吧"));
-
         return true;
     }
 }
