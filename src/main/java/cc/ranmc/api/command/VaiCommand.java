@@ -1,30 +1,16 @@
 package cc.ranmc.api.command;
 
 import cc.ranmc.api.Main;
-import cc.ranmc.api.util.BasicUtil;
-import com.bekvon.bukkit.residence.api.ResidenceApi;
-import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static cc.ranmc.api.util.BasicUtil.color;
 
@@ -46,14 +32,16 @@ public class VaiCommand implements CommandExecutor {
 
         sender.sendMessage(color("&e修复村民 AI 开始运行"));
         Bukkit.getWorlds().forEach(world -> {
+            AtomicInteger count = new AtomicInteger();
             for (Entity entity : world.getEntities()) {
                 entity.getScheduler().run(Main.getInstance(), task -> {
                     if (entity instanceof Villager villager && !villager.hasAI()) {
                         villager.setAI(true);
+                        count.getAndIncrement();
                     }
                 }, ()->{});
-                sender.sendMessage(color("&a修复村民 AI 成功"));
             }
+            sender.sendMessage(color("&a成功修复村民 AI :" + count + "个"));
         });
         return true;
     }
