@@ -8,7 +8,9 @@ import cc.ranmc.online.command.MainCommand;
 import cc.ranmc.online.command.MainTabComplete;
 import cc.ranmc.online.command.VaiCommand;
 import cc.ranmc.online.listener.AttributeListener;
+import cc.ranmc.online.listener.EntityListener;
 import cc.ranmc.online.listener.GUIListener;
+import cc.ranmc.online.listener.PlayerListener;
 import cc.ranmc.online.util.BasicUtil;
 import cc.ranmc.online.util.TearUtil;
 import com.alibaba.fastjson2.JSONObject;
@@ -32,6 +34,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityPortalEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -42,7 +45,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Main extends JavaPlugin implements Listener {
+import static cc.ranmc.online.util.BasicUtil.print;
+
+public class Main extends JavaPlugin {
 
     private static final JSONObject tps = new JSONObject();
     private static Javalin javalin;
@@ -58,10 +63,14 @@ public class Main extends JavaPlugin implements Listener {
     public void onEnable() {
         instance = this;
         foliaLib = new FoliaLib(this);
-        javalin = Javalin.create()
-                .get("/tps", this::getTps)
-                .get("/online", this::getOnline)
-                .start(2263);
+        try {
+            javalin = Javalin.create()
+                    .get("/tps", this::getTps)
+                    .get("/online", this::getOnline)
+                    .start(2263);
+        } catch (Exception ignored) {
+            print("&ctps服务器启动失败");
+        }
 
         // 加载 config
         if (!new File(getDataFolder() + File.separator + "config.yml").exists()) {
@@ -87,39 +96,16 @@ public class Main extends JavaPlugin implements Listener {
         Objects.requireNonNull(attributeCmd).setExecutor(new AttributeCommand());
         attributeCmd.setTabCompleter(new AttributeTabComplete());
 
-        Bukkit.getPluginManager().registerEvents(this, this);
         Bukkit.getPluginManager().registerEvents(new AttributeListener(), this);
         Bukkit.getPluginManager().registerEvents(new GUIListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
+        Bukkit.getPluginManager().registerEvents(new EntityListener(), this);
 
         tps.put("code", 200);
         tps.put("data", new ArrayList<>());
         foliaLib.getScheduler().runTimer(this::logTps, 1, 20 * 60 * 10);
 
         super.onEnable();
-    }
-
-    @EventHandler
-    public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
-        if (event.isCancelled()) return;
-        if (event.getDamager() instanceof Creeper creeper &&
-                event.getEntity() instanceof Player player) {
-            ItemStack item = player.getInventory().getHelmet();
-            if (item != null && item.getType() == Material.PLAYER_HEAD && creeper.isPowered()) {
-                SkullMeta meta = (SkullMeta) item.getItemMeta();
-                if (!Objects.requireNonNull(meta).hasOwner()) {
-                    meta.setOwningPlayer(player);
-                    item.setItemMeta(meta);
-                }
-            }
-        }
-    }
-
-    @EventHandler
-    public void onEntityDeathEvent(EntityDeathEvent event) {
-        if (event.getEntity() instanceof EnderDragon) {
-            Location location = event.getEntity().getLocation();
-            Objects.requireNonNull(location.getWorld()).dropItem(location, TearUtil.getTearItem()).setGlowing(true);
-        }
     }
 
     @Override
@@ -130,25 +116,6 @@ public class Main extends JavaPlugin implements Listener {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-    }
-
-    @EventHandler
-    public void onPlayerLogin(PlayerLoginEvent event) {
-        if (event.getResult() == PlayerLoginEvent.Result.KICK_FULL) {
-            Player player = event.getPlayer();
-            if (player.hasPermission("thy.joinfullserver")) {
-                event.allow();
-            }
-        }
-    }
-
-    @EventHandler
-    public void onEntityPortal(EntityPortalEvent event) {
-        Entity entity = event.getEntity();
-        if (entity instanceof Item item) {
-            event.setCancelled(true);
-            item.remove();
         }
     }
 

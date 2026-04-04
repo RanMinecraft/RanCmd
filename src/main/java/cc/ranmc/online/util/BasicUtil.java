@@ -2,6 +2,8 @@ package cc.ranmc.online.util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -84,4 +86,22 @@ public class BasicUtil {
         return item;
     }
 
+    /**
+     * 玩家背包是否已满
+     * @param player 玩家
+     * @return 是否已满
+     */
+    public static boolean isInventoryFull(Player player) {
+        return isInventoryFull(player.getInventory());
+    }
+
+    public static boolean isInventoryFull(Inventory inventory) {
+        for (int i = 0; i < 36; i++) {
+            ItemStack item = inventory.getItem(i);
+            if (item == null || item.getType() == Material.AIR) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
