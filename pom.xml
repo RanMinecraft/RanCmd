@@ -57,10 +57,27 @@
                     <relocations>
                         <relocation>
                             <pattern>com.tcoded.folialib</pattern>
-                            <!-- !! MAKE SURE TO CHANGE THIS TO YOUR PLUGIN'S GROUP & PLUGIN NAME !! -->
-                            <shadedPattern>CHANGE-THE-GROUP.CHANGE-THE-PLUGIN-NAME.lib.folialib</shadedPattern>
+                            <shadedPattern>cc.ranmc.online.lib.folialib</shadedPattern>
                         </relocation>
                     </relocations>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                        <manifestEntries>
+                            <!--suppress UnresolvedMavenProperty -->
+                            <Implementation-Version>${pluginVersion}</Implementation-Version>
+                        </manifestEntries>
+                    </archive>
+                    <!-- 指定打包 jar 输出路径 -->
+                    <outputDirectory>/usrs/rain/Desktop/Paper/plugins</outputDirectory>
                 </configuration>
             </plugin>
         </plugins>
@@ -122,10 +139,11 @@
             <version>6.0.0.1</version>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.42</version>
+            <version>1.18.44</version>
             <scope>provided</scope>
         </dependency>
 

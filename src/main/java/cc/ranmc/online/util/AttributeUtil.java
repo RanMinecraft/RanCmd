@@ -1,6 +1,6 @@
-package cc.ranmc.api.util;
+package cc.ranmc.online.util;
 
-import cc.ranmc.api.Main;
+import cc.ranmc.online.Main;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

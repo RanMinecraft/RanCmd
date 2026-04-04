@@ -1,11 +1,12 @@
 name: RanOnlineApi
-main: cc.ranmc.api.Main
+main: cc.ranmc.online.Main
 description: '阿然定制24k纯钛合金超级无敌终终终终极版的查询在线插件'
 website: https://www.ranmc.cc/
 author: Ranica
 api-version: "1.13"
 version: Release 3.0
 folia-supported: true
+softdepend: [Essentials,Vault]
 
 permissions:
   roa.user:

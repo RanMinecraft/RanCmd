@@ -1,6 +1,6 @@
-package cc.ranmc.api.command;
+package cc.ranmc.online.command;
 
-import cc.ranmc.api.Main;
+import cc.ranmc.online.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -12,7 +12,7 @@ import org.jspecify.annotations.NonNull;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static cc.ranmc.api.util.BasicUtil.color;
+import static cc.ranmc.online.util.BasicUtil.color;
 
 public class VaiCommand implements CommandExecutor {
     

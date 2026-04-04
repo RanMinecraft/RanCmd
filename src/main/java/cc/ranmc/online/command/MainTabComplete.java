@@ -1,4 +1,4 @@
-package cc.ranmc.api.command;
+package cc.ranmc.online.command;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

@@ -1,13 +1,13 @@
-package cc.ranmc.api.listener;
+package cc.ranmc.online.listener;
 
-import cc.ranmc.api.Main;
+import cc.ranmc.online.Main;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-import static cc.ranmc.api.util.BasicUtil.color;
+import static cc.ranmc.online.util.BasicUtil.color;
 
 public class GUIListener implements Listener {
 

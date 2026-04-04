@@ -1,7 +1,7 @@
-package cc.ranmc.api.listener;
+package cc.ranmc.online.listener;
 
-import cc.ranmc.api.Main;
-import cc.ranmc.api.util.AttributeUtil;
+import cc.ranmc.online.Main;
+import cc.ranmc.online.util.AttributeUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 
-import static cc.ranmc.api.util.BasicUtil.color;
+import static cc.ranmc.online.util.BasicUtil.color;
 
 public class AttributeListener implements Listener {
 
@@ -74,7 +74,6 @@ public class AttributeListener implements Listener {
             pdamagee = target;
             targetAttributeMap = AttributeUtil.getMetaLoreAP(pdamagee);
         }
-        if (!plugin.getConfig().getBoolean("enableSkill")) return;
 
         // 触发斩杀对象
         LivingEntity slainTarget = null;

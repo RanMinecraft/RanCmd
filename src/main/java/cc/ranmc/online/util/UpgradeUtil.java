@@ -1,6 +1,6 @@
-package cc.ranmc.api.util;
+package cc.ranmc.online.util;
 
-import cc.ranmc.api.Main;
+import cc.ranmc.online.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static cc.ranmc.api.util.AttributeUtil.ATTRIBUTES;
-import static cc.ranmc.api.util.BasicUtil.color;
+import static cc.ranmc.online.util.AttributeUtil.ATTRIBUTES;
+import static cc.ranmc.online.util.BasicUtil.color;
 
 public class UpgradeUtil {
     private static final Main plugin = Main.getInstance();

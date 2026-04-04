@@ -1,4 +1,4 @@
-package cc.ranmc.api.util;
+package cc.ranmc.online.util;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static cc.ranmc.api.util.BasicUtil.color;
+import static cc.ranmc.online.util.BasicUtil.color;
 
 public class TearUtil {
 

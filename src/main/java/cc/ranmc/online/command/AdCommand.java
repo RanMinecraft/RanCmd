@@ -1,8 +1,7 @@
-package cc.ranmc.api.command;
+package cc.ranmc.online.command;
 
-import cc.ranmc.api.Main;
-import cc.ranmc.api.util.BasicUtil;
-import com.bekvon.bukkit.residence.Residence;
+import cc.ranmc.online.Main;
+import cc.ranmc.online.util.BasicUtil;
 import com.bekvon.bukkit.residence.api.ResidenceApi;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import net.milkbowl.vault.economy.Economy;
@@ -11,22 +10,19 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static cc.ranmc.api.util.BasicUtil.color;
+import static cc.ranmc.online.util.BasicUtil.color;
 
 public class AdCommand implements CommandExecutor {
     
