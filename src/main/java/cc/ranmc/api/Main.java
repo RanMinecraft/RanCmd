@@ -2,31 +2,37 @@ package cc.ranmc.api;
 
 import cc.ranmc.api.command.AdCommand;
 import cc.ranmc.api.command.AdTabComplete;
+import cc.ranmc.api.command.AttributeCommand;
+import cc.ranmc.api.command.AttributeTabComplete;
 import cc.ranmc.api.command.MainCommand;
 import cc.ranmc.api.command.MainTabComplete;
 import cc.ranmc.api.command.VaiCommand;
 import cc.ranmc.api.listener.AttributeListener;
+import cc.ranmc.api.listener.GUIListener;
 import cc.ranmc.api.util.BasicUtil;
+import cc.ranmc.api.util.TearUtil;
 import com.alibaba.fastjson2.JSONObject;
+import com.tcoded.folialib.FoliaLib;
 import io.javalin.Javalin;
 import io.javalin.http.ContentType;
 import io.javalin.http.Context;
 import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Creeper;
+import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityPortalEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -36,24 +42,22 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import static cc.ranmc.api.util.BasicUtil.color;
-import static cc.ranmc.api.util.FoliaUtil.isFolia;
-
 public class Main extends JavaPlugin implements Listener {
 
     private static final JSONObject tps = new JSONObject();
     private static Javalin javalin;
     @Getter
     private static Main instance;
-
     //经济插件
     @Getter
-    private static Economy econ;
+    private Economy econ;
+    @Getter
+    private FoliaLib foliaLib;
 
     @Override
     public void onEnable() {
         instance = this;
-
+        foliaLib = new FoliaLib(this);
         javalin = Javalin.create()
                 .get("/tps", this::getTps)
                 .get("/online", this::getOnline)
@@ -79,37 +83,19 @@ public class Main extends JavaPlugin implements Listener {
         PluginCommand vaiCmd = Bukkit.getPluginCommand("vai");
         Objects.requireNonNull(vaiCmd).setExecutor(new VaiCommand());
 
+        PluginCommand attributeCmd = Bukkit.getPluginCommand("attribute");
+        Objects.requireNonNull(attributeCmd).setExecutor(new AttributeCommand());
+        attributeCmd.setTabCompleter(new AttributeTabComplete());
+
         Bukkit.getPluginManager().registerEvents(this, this);
         Bukkit.getPluginManager().registerEvents(new AttributeListener(), this);
+        Bukkit.getPluginManager().registerEvents(new GUIListener(), this);
 
         tps.put("code", 200);
         tps.put("data", new ArrayList<>());
-        if (isFolia()) {
-            Bukkit.getServer().getGlobalRegionScheduler().runAtFixedRate(this,
-                    task -> logTps(), 1, 20 * 60 * 10);
-        } else {
-            Bukkit.getServer().getScheduler().runTaskTimer(this, this::logTps, 0, 20 * 60 * 10);
-        }
-        super.onEnable();
-    }
+        foliaLib.getScheduler().runTimer(this::logTps, 1, 20 * 60 * 10);
 
-    @EventHandler
-    public void onInventoryClick(InventoryClickEvent event) {
-        Player player = (Player) event.getWhoClicked();
-        ItemStack clicked = event.getCurrentItem();
-        if (event.getView().getTitle().equalsIgnoreCase(color("&b&l领地宣传栏"))) {
-            event.setCancelled(true);
-            if (clicked == null) return;
-            if (clicked.getType().toString().endsWith("_SIGN")) {
-                player.closeInventory();
-                String[] adInfo = getConfig().getStringList("ad-list").get(event.getRawSlot()-1).split(" ");
-                player.chat("/res tp " + adInfo[0]);
-            }
-            // 取消按钮
-            if (event.getRawSlot() == 0) {
-                player.closeInventory();
-            }
-        }
+        super.onEnable();
     }
 
     @EventHandler
@@ -125,6 +111,14 @@ public class Main extends JavaPlugin implements Listener {
                     item.setItemMeta(meta);
                 }
             }
+        }
+    }
+
+    @EventHandler
+    public void onEntityDeathEvent(EntityDeathEvent event) {
+        if (event.getEntity() instanceof EnderDragon) {
+            Location location = event.getEntity().getLocation();
+            Objects.requireNonNull(location.getWorld()).dropItem(location, TearUtil.getTearItem()).setGlowing(true);
         }
     }
 

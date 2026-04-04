@@ -123,10 +123,10 @@ public class AdCommand implements CommandExecutor {
             player.openInventory(inv);
         } else {
             // 创建宣传栏
-            Economy econ = Main.getEcon();
+            Economy econ = plugin.getEcon();
             int price = plugin.getConfig().getInt("ad-price");
             if (econ.getBalance(player) < price) {
-                sender.sendMessage(color("&c你的金券不足"));
+                sender.sendMessage(color("&c你的金币不足"));
                 return true;
             }
             List<String> adlist = plugin.getConfig().getStringList("ad-list");

@@ -15,7 +15,33 @@ import java.util.Map;
 
 public class AttributeUtil {
 
-    private List<String> attributes = List.of("");
+    public static final List<String> ATTRIBUTES = List.of(
+            "真实伤害",
+            "物理伤害",
+            "物理防御",
+            "暴击几率",
+            "暴击伤害",
+            "暴击防御",
+            "吸血几率",
+            "吸血伤害",
+            "吸血防御",
+            "冰冻几率",
+            "流血几率",
+            "致盲几率",
+            "闪避几率",
+            "漂浮几率",
+            "反弹几率",
+            "斩杀几率",
+            "远程伤害",
+            "近战伤害",
+            "远程防御",
+            "近战防御",
+            "眩晕几率",
+            "雷击几率",
+            "虚弱几率",
+            "击飞几率",
+            "混乱几率",
+            "雷击伤害");
 
     /**
      * 获取玩家属性信息
@@ -35,11 +61,9 @@ public class AttributeUtil {
         Map<String,Integer> info = new HashMap<>();
         for (ItemMeta meta : metaList) {
             List<String> list = meta.getLore();
-            List<String> attributes = plugin.getConfig().getStringList("RandomGrade");
-            attributes.addAll(plugin.getConfig().getStringList("HideGrade"));
             if (list != null) {
                 for (String lore : list) {
-                    for (String name : attributes) {
+                    for (String name : ATTRIBUTES) {
                         int value = info.getOrDefault(name, 0) + getLoreValue(lore, name);
                         info.put(name, name.contains("几率") ? Math.min(value, 50) : value);
                     }
@@ -83,5 +107,31 @@ public class AttributeUtil {
             }
         }
         return value;
+    }
+
+    /**
+     * 打开玩家属性书
+     * @param player 玩家
+     */
+    public static void openMetaBook(Player player) {
+        Map<String,Integer> meta = getMetaLoreAP(player);
+        StringBuilder builder = new StringBuilder("    "+player.getName()+"个人属性\n\n");
+        List<String> text = new ArrayList<>();
+        int count = 2;
+        for (String name : ATTRIBUTES) {
+            builder.append("   ");
+            builder.append(name);
+            builder.append(" - ");
+            builder.append(meta.getOrDefault(name, 0));
+            builder.append("\n");
+            count++;
+            if (count > 13) {
+                text.add(builder.toString());
+                builder = new StringBuilder();
+                count = 0;
+            }
+        }
+        if (!builder.isEmpty()) text.add(builder.toString());
+        player.openBook(BasicUtil.getBook(1, "个人属性", player.getName(), text));
     }
 }

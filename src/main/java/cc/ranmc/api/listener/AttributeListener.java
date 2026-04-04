@@ -2,15 +2,12 @@ package cc.ranmc.api.listener;
 
 import cc.ranmc.api.Main;
 import cc.ranmc.api.util.AttributeUtil;
-import cc.ranmc.api.util.FoliaUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
-import org.bukkit.entity.AreaEffectCloud;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Egg;
-import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -81,8 +78,6 @@ public class AttributeListener implements Listener {
 
         // 触发斩杀对象
         LivingEntity slainTarget = null;
-        // 是否触发反弹
-        boolean back = false;
         if (damager instanceof Player target) {
             pdamager = target;
 
@@ -175,10 +170,6 @@ public class AttributeListener implements Listener {
                         Objects.requireNonNull(damagee.getLocation().getWorld()).spawnParticle(Particle.GLOW, damagee.getLocation(), 5, 0.3, 1, 0.3, 0.01);
                     }
                 }
-                damage += damgerAttributeMap.getOrDefault("PVP伤害", 0);
-            } else {
-                // 玩家攻击生物
-                damage += damgerAttributeMap.getOrDefault("PVE伤害", 0);
             }
 
             // 玩家攻击实体
@@ -216,14 +207,8 @@ public class AttributeListener implements Listener {
                     WindCharge windCharge = damagee.getLocation().getWorld().spawn(damagee.getLocation(), WindCharge.class);
                     windCharge.explode();
                     double finalX = x;
-                    if (FoliaUtil.isFolia()) {
-                        damagee.getScheduler().runDelayed(plugin, task ->
-                                damagee.setVelocity(new Vector(finalX, 1.2, z)), () -> {}, 1);
-                    } else {
-                        Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () ->
-                                damagee.setVelocity(new Vector(finalX, 1.2, z)), 1);
-                    }
-
+                    plugin.getFoliaLib().getScheduler().runAtEntityLater(damagee, () ->
+                            damagee.setVelocity(new Vector(finalX, 1.2, z)), 1);
                     if (pdamagee != null) {
                         pdamagee.setVelocity(new Vector(x, 3, z));
                         pdamagee.sendTitle(" ", "你被对方发动了击飞",1,10,1);
@@ -299,27 +284,20 @@ public class AttributeListener implements Listener {
             }
             if (pdamager == null) {
                 // 来自非玩家伤害
-                damage -= ((double) (targetAttributeMap.getOrDefault("PVE防御", 0) +
-                        targetAttributeMap.getOrDefault("物理防御", 0) +
+                damage -= ((double) (targetAttributeMap.getOrDefault("物理防御", 0) +
                         targetAttributeMap.getOrDefault(combat ? "近战防御" : "远程防御", 0))) / defense;
             } else {
                 // 来自玩家伤害
                 damgerAttributeMap = AttributeUtil.getMetaLoreAP(pdamager);
-                double playerDefense = targetAttributeMap.getOrDefault("PVP防御", 0)
-                        + targetAttributeMap.getOrDefault("物理防御", 0)
+                double playerDefense = targetAttributeMap.getOrDefault("物理防御", 0)
                         + targetAttributeMap.getOrDefault(combat ? "近战防御" : "远程防御", 0)
                         - damgerAttributeMap.getOrDefault("真实伤害", 0);
                 if (playerDefense > 0) damage -= playerDefense / defense;
                 if (targetAttributeMap.getOrDefault("反弹几率", 0) >= random.nextInt(100) + 1) {
                     if (slainTarget != null) {
                         slainTarget = pdamager;
-                        if (FoliaUtil.isFolia()) {
-                            damagee.getScheduler().run(plugin, task ->
-                                    pdamager.damage(1), () -> {});
-                        } else {
-                            Bukkit.getScheduler().runTaskAsynchronously(plugin, () ->
-                                    pdamager.damage(1));
-                        }
+                        plugin.getFoliaLib().getScheduler().runAtEntity(pdamager, _ ->
+                                pdamager.damage(1));
                         Objects.requireNonNull(damagee.getLocation().getWorld())
                                 .spawnParticle(Particle.GLOW, damagee.getLocation(), 20, 0.5, 1, 0.5, 0.02);
                         pdamagee.sendTitle(" ", "&c你反弹了对方的斩杀", 1, 10, 1);
@@ -333,18 +311,12 @@ public class AttributeListener implements Listener {
                     damage = 0;
                     Objects.requireNonNull(damagee.getLocation().getWorld())
                             .spawnParticle(Particle.ELECTRIC_SPARK, damagee.getLocation(), 5, 0.3, 1, 0.3, 0.01);
-                    back = true;
                 }
             }
         }
         if (slainTarget != null && !slainTarget.isDead()) {
             if (slainTarget instanceof Player slainPlayer) {
                 slainPlayer.setHealth(0.1);
-                /*if (back) {
-                    Ranmc.getData().getSlainMap().put(pdamager.getName(), pdamagee.getName());
-                } else {
-                    Ranmc.getData().getSlainMap().put(Objects.requireNonNull(pdamagee).getName(), pdamager.getName());
-                }*/
             } else {
                 slainTarget.setHealth(0.1);
             }

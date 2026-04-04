@@ -20,6 +20,10 @@ permissions:
     default: op
     description: 'join full server'
 
+  roa.vip:
+    default: op
+    description: 'vip'
+
 commands:
   roa:
     description: roa
@@ -31,4 +35,8 @@ commands:
 
   vai:
     description: vai
+    usage: /<command>
+
+  attribute:
+    description: attribute
     usage: /<command>

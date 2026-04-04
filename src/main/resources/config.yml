@@ -5,3 +5,14 @@ ad-length: 16
 
 # 牌子记录，无需配置
 ad-list: []
+
+# 使用龙泪最大装备强化次数
+max-upgrade-count: 6
+# 默认装备强化次数
+upgrade-count: 4
+# 强化清除价格
+upgrade-price: 5000
+# 强化清除价格
+upgrade-clear-price: 2000
+# 修复物品价格
+fix-item-price: 2000
