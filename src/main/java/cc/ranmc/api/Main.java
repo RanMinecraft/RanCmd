@@ -5,6 +5,7 @@ import cc.ranmc.api.command.AdTabComplete;
 import cc.ranmc.api.command.MainCommand;
 import cc.ranmc.api.command.MainTabComplete;
 import cc.ranmc.api.command.VaiCommand;
+import cc.ranmc.api.listener.AttributeListener;
 import cc.ranmc.api.util.BasicUtil;
 import com.alibaba.fastjson2.JSONObject;
 import io.javalin.Javalin;
@@ -79,6 +80,7 @@ public class Main extends JavaPlugin implements Listener {
         Objects.requireNonNull(vaiCmd).setExecutor(new VaiCommand());
 
         Bukkit.getPluginManager().registerEvents(this, this);
+        Bukkit.getPluginManager().registerEvents(new AttributeListener(), this);
 
         tps.put("code", 200);
         tps.put("data", new ArrayList<>());
