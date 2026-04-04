@@ -130,7 +130,7 @@ public class UpgradeUtil {
                     1,
                     "&b确认修复",
                     "&e花费金币: " + plugin.getConfig().getInt("fix-item-price",2000),
-                    "&9SVIP免费使用",
+                    "&9VIP免费使用",
                     "&9修复物品耐久度"));
             ItemStack item = inventory.getItem(4);
             if (item == null) {
@@ -393,7 +393,7 @@ public class UpgradeUtil {
         inventory.setItem(6, BasicUtil.getItem(Material.LIME_STAINED_GLASS_PANE, 1,
                 "&b确认修复",
                 "&e花费金币: " + plugin.getConfig().getInt("fix-item-price",2000),
-                "&9SVIP免费使用",
+                "&9VIP免费使用",
                 "&9修复物品耐久度"));
         inventory.setItem(2, BasicUtil.getItem(Material.RED_STAINED_GLASS_PANE, 1, "&c关闭菜单"));
         inventory.setItem(0, PANE);
