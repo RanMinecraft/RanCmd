@@ -49,10 +49,7 @@ public class UpgradeUtil {
             player.sendMessage(PREFIX + color("&c你没有足够的金币"));
             return;
         }
-        if (!plugin.getEcon().withdrawPlayer(player, price).transactionSuccess()) {
-            player.sendMessage(PREFIX + color("&c扣款失败,无法清除"));
-            return;
-        }
+        plugin.getEcon().withdrawPlayer(player, price);
         List<String> newLores = new ArrayList<>();
         for (String lore : lores) {
             if (lore.contains(UPGRADE_PREFIX)) newLores.add(UPGRADE_PREFIX + " 0 / " + lore.split(" ")[3]);
@@ -83,10 +80,7 @@ public class UpgradeUtil {
             player.sendMessage(PREFIX + color("&c你没有足够的金币"));
             return;
         }
-        if (!plugin.getEcon().withdrawPlayer(player, price).transactionSuccess()) {
-            player.sendMessage(PREFIX + color("&c扣款失败,无法修复"));
-            return;
-        }
+        plugin.getEcon().withdrawPlayer(player, price);
         if (lore != null) {
             for (int ii = 0; ii < lore.size(); ii++) {
                 String ss = lore.get(ii);
@@ -369,20 +363,16 @@ public class UpgradeUtil {
                 return;
             }
         }
-        if (!plugin.getEcon().withdrawPlayer(player, price).transactionSuccess()) {
-            gradeNum += count;
-            lores.set(info, UPGRADE_PREFIX + " " + gradeNum + " / " + maxNum);
-            while (count > 0) {
-                count--;
-                lores.add(color("&e" + generateAttribute()));
-            }
-            meta.setLore(lores);
-            item.setItemMeta(meta);
-            player.sendMessage(PREFIX + color("&a" + (quick ? "快速" : "") + "强化成功,请取回物品"));
-        } else {
-            // 扣款失败
-            player.sendMessage(PREFIX + color("&c扣款失败,无法强化"));
+        plugin.getEcon().withdrawPlayer(player, price);
+        gradeNum += count;
+        lores.set(info, UPGRADE_PREFIX + " " + gradeNum + " / " + maxNum);
+        while (count > 0) {
+            count--;
+            lores.add(color("&e" + generateAttribute()));
         }
+        meta.setLore(lores);
+        item.setItemMeta(meta);
+        player.sendMessage(PREFIX + color("&a" + (quick ? "快速" : "") + "强化成功,请取回物品"));
     }
 
     /**
@@ -405,7 +395,7 @@ public class UpgradeUtil {
                 "&e花费金币: " + plugin.getConfig().getInt("fix-item-price",2000),
                 "&9SVIP免费使用",
                 "&9修复物品耐久度"));
-        inventory.setItem(2, BasicUtil.getItem(Material.RED_STAINED_GLASS_PANE, 1, "&c返回菜单"));
+        inventory.setItem(2, BasicUtil.getItem(Material.RED_STAINED_GLASS_PANE, 1, "&c关闭菜单"));
         inventory.setItem(0, PANE);
         inventory.setItem(1, PANE);
         inventory.setItem(3, PANE);
@@ -427,7 +417,7 @@ public class UpgradeUtil {
                 "&9清除物品全部属性",
                 "&9不影响物品的附魔",
                 "&9请慎重使用该功能"));
-        inventory.setItem(2, BasicUtil.getItem(Material.RED_STAINED_GLASS_PANE, 1, "&c返回菜单"));
+        inventory.setItem(2, BasicUtil.getItem(Material.RED_STAINED_GLASS_PANE, 1, "&c关闭菜单"));
         inventory.setItem(0, PANE);
         inventory.setItem(1, PANE);
         inventory.setItem(3, PANE);
@@ -448,7 +438,7 @@ public class UpgradeUtil {
                 "&9请放置强化物品",
                 "&9支持全物品强化",
                 "&9将获得随机属性"));
-        inventory.setItem(2, BasicUtil.getItem(Material.RED_STAINED_GLASS_PANE, 1, "&c返回菜单"));
+        inventory.setItem(2, BasicUtil.getItem(Material.RED_STAINED_GLASS_PANE, 1, "&c关闭菜单"));
         inventory.setItem(0, PANE);
         inventory.setItem(1, PANE);
         inventory.setItem(3, PANE);
