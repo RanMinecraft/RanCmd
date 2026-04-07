@@ -106,7 +106,7 @@ public class AttributeListener implements Listener {
                 // 禁止自己伤害自己
                 if (pdamager == pdamagee) return;
 
-                toughness -= (Objects.requireNonNull(pdamagee.getAttribute(org.bukkit.attribute.Attribute.ARMOR)).getValue() / 40);
+                //toughness -= (Objects.requireNonNull(pdamagee.getAttribute(org.bukkit.attribute.Attribute.ARMOR)).getValue() / 40);
                 bloodArmor = targetAttributeMap.getOrDefault("吸血防御", 0);
                 critArmor =  targetAttributeMap.getOrDefault("暴击防御", 0);
 

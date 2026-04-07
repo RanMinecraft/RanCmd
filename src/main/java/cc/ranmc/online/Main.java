@@ -142,7 +142,7 @@ public class Main extends JavaPlugin {
         JSONObject data = new JSONObject();
         data.put("online", Bukkit.getOnlinePlayers().size());
         data.put("max", Bukkit.getMaxPlayers());
-        data.put("version", Bukkit.getBukkitVersion().split("-")[0]);
+        data.put("version", Bukkit.getBukkitVersion().split("-")[0].split("\\.build")[0]);
         res.put("data", data);
         context.contentType(ContentType.APPLICATION_JSON);
         context.result(res.toString());

@@ -8,6 +8,7 @@ import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -50,6 +51,14 @@ public class EntityListener implements Listener {
         if (entity instanceof Item item) {
             event.setCancelled(true);
             item.remove();
+        }
+        if (entity instanceof Snowball snowball) {
+            event.setCancelled(true);
+            snowball.remove();
+        }
+        if (entity.getType().toString().endsWith("MINECART")) {
+            event.setCancelled(true);
+            entity.remove();
         }
     }
 }
