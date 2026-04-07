@@ -17,6 +17,7 @@ import org.bukkit.entity.WindCharge;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -106,7 +107,7 @@ public class AttributeListener implements Listener {
                 // 禁止自己伤害自己
                 if (pdamager == pdamagee) return;
 
-                //toughness -= (Objects.requireNonNull(pdamagee.getAttribute(org.bukkit.attribute.Attribute.ARMOR)).getValue() / 40);
+                toughness -= (Objects.requireNonNull(pdamagee.getAttribute(org.bukkit.attribute.Attribute.ARMOR)).getValue() / 40);
                 bloodArmor = targetAttributeMap.getOrDefault("吸血防御", 0);
                 critArmor =  targetAttributeMap.getOrDefault("暴击防御", 0);
 
@@ -257,7 +258,7 @@ public class AttributeListener implements Listener {
                     Objects.requireNonNull(damagee.getLocation().getWorld()).spawnParticle(Particle.EXPLOSION, damagee.getLocation(), 2, 0.3, 1, 0.3, 0.01);
                 }
             }
-            damage = damage * (combat ? pdamager.getAttackCooldown() : 1) * toughness;
+            damage = damage * ((combat && event.getCause() != EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK) ? (pdamager.getAttackCooldown()) : 1) * toughness;
         } else {
             pdamager = null;
         }
