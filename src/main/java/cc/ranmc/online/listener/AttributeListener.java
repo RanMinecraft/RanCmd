@@ -61,6 +61,8 @@ public class AttributeListener implements Listener {
             }
         }
 
+        if (!Main.getInstance().getConfig().getBoolean("enable-attribute", false)) return;
+
         Player pdamager, pdamagee = null;
         Map<String,Integer> damgerAttributeMap, targetAttributeMap = null;
         double damage = event.getDamage();

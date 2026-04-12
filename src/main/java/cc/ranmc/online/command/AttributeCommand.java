@@ -41,6 +41,11 @@ public class AttributeCommand implements CommandExecutor {
             return true;
         }
 
+        if (!Main.getInstance().getConfig().getBoolean("enable-attribute", false)) {
+            player.sendMessage(color("&c该功能目前已被禁用"));
+            return true;
+        }
+
         // 清除强化
         if (args[0].equalsIgnoreCase("clear")) {
             UpgradeUtil.openClearInv(player, plugin.getConfig().getInt("upgrade-clear-price",2000));

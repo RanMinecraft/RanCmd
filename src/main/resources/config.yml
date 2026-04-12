@@ -16,3 +16,6 @@ upgrade-price: 5000
 upgrade-clear-price: 2000
 # 修复物品价格
 fix-item-price: 2000
+
+# 开启强化属性
+enable-attribute: false

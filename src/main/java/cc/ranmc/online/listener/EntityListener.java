@@ -1,5 +1,6 @@
 package cc.ranmc.online.listener;
 
+import cc.ranmc.online.Main;
 import cc.ranmc.online.util.TearUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -39,7 +40,8 @@ public class EntityListener implements Listener {
 
     @EventHandler
     public void onEntityDeathEvent(EntityDeathEvent event) {
-        if (event.getEntity() instanceof EnderDragon) {
+        if (Main.getInstance().getConfig().getBoolean("enable-attribute", false) &&
+                event.getEntity() instanceof EnderDragon) {
             Location location = event.getEntity().getLocation();
             Objects.requireNonNull(location.getWorld()).dropItem(location, TearUtil.getTearItem()).setGlowing(true);
         }
