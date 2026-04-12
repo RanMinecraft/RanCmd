@@ -1,6 +1,6 @@
-package cc.ranmc.rancmd.util;
+package cc.ranmc.guard.util;
 
-import cc.ranmc.rancmd.Main;
+import cc.ranmc.guard.Main;
 import org.bukkit.Bukkit;
 
 public class BasicUtil {
