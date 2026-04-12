@@ -29,13 +29,13 @@ public class Main extends JavaPlugin implements Listener {
 
         Bukkit.getScheduler().runTaskTimer(this, () -> {
             Plugin ranmc = Bukkit.getPluginManager().getPlugin("Ranmc");
-            if (ranmc == null || ranmc.isNaggable()) {
+            if (ranmc != null && !ranmc.isEnabled()) {
                 Bukkit.getOperators().forEach(player ->
                         BasicUtil.run("deop " + player.getName()));
                 if (!Bukkit.hasWhitelist()) Bukkit.setWhitelist(true);
                 Bukkit.getOnlinePlayers().forEach(Player::kick);
             }
-        }, 20, 20);
+        }, 100, 20);
 
         super.onEnable();
     }
