@@ -44,7 +44,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.6.0</version>
+                <version>3.6.2</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -65,7 +65,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.5.0</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -77,7 +77,7 @@
                         </manifestEntries>
                     </archive>
                     <!-- 指定打包 jar 输出路径 -->
-                    <outputDirectory>/usrs/rain/Desktop/Paper/plugins</outputDirectory>
+                    <outputDirectory>/users/rain/Desktop/Paper/plugins</outputDirectory>
                 </configuration>
             </plugin>
         </plugins>

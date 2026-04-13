@@ -62,11 +62,6 @@ public class Main extends JavaPlugin {
         }
         reloadConfig();
 
-        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-        if (rsp == null) {
-            print("&c无法获取到经济插件");
-        } else econ = rsp.getProvider();
-
         // 注册指令
         PluginCommand mainCmd = Bukkit.getPluginCommand("roa");
         Objects.requireNonNull(mainCmd).setExecutor(new MainCommand());
@@ -91,6 +86,11 @@ public class Main extends JavaPlugin {
         tps.put("code", 200);
         tps.put("data", new ArrayList<>());
         foliaLib.getScheduler().runTimer(this::logTps, 1, 20 * 60 * 10);
+
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null) {
+            print("&c无法获取到经济插件");
+        } else econ = rsp.getProvider();
 
         super.onEnable();
     }

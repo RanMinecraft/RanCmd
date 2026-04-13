@@ -6,7 +6,7 @@ author: Ranica
 api-version: "1.13"
 version: Release 3.1
 folia-supported: true
-softdepend: [Essentials,Vault]
+softdepend: [Vault]
 
 permissions:
   roa.user:
