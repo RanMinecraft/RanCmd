@@ -21,6 +21,7 @@ import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -61,7 +62,10 @@ public class Main extends JavaPlugin {
         }
         reloadConfig();
 
-        econ = getServer().getServicesManager().getRegistration(Economy.class).getProvider();
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null) {
+            print("&c无法获取到经济插件");
+        } else econ = rsp.getProvider();
 
         // 注册指令
         PluginCommand mainCmd = Bukkit.getPluginCommand("roa");
