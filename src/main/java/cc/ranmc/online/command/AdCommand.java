@@ -144,7 +144,7 @@ public class AdCommand implements CommandExecutor {
                     sender.sendMessage(color("&c介绍字数过长"));
                     return;
                 }
-                adlist.add(args[0] + " " + player.getName() + " " + result.replace(" ", "%n") + " " + BasicUtil.getDate(endtime));
+                adlist.add(residence.getName() + " " + player.getName() + " " + result.replace(" ", "%n") + " " + BasicUtil.getDate(endtime));
                 plugin.getDataYml().set("ad-list", adlist);
                 try {
                     plugin.getDataYml().save(plugin.getDataFile());
