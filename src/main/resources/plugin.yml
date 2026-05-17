@@ -45,3 +45,7 @@ commands:
   cancelinput:
     description: cancelinput
     usage: /<command>
+
+  name:
+    description: name
+    usage: /<command>

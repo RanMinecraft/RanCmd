@@ -7,6 +7,7 @@ import cc.ranmc.online.command.AttributeTabComplete;
 import cc.ranmc.online.command.CancelInputCommand;
 import cc.ranmc.online.command.MainCommand;
 import cc.ranmc.online.command.MainTabComplete;
+import cc.ranmc.online.command.NameCommand;
 import cc.ranmc.online.command.VaiCommand;
 import cc.ranmc.online.listener.AttributeListener;
 import cc.ranmc.online.listener.EntityListener;
@@ -89,6 +90,9 @@ public class Main extends JavaPlugin {
 
         PluginCommand cancelInputCmd = Bukkit.getPluginCommand("cancelinput");
         Objects.requireNonNull(cancelInputCmd).setExecutor(new CancelInputCommand());
+
+        PluginCommand nameCmd = Bukkit.getPluginCommand("name");
+        Objects.requireNonNull(nameCmd).setExecutor(new NameCommand());
 
         Bukkit.getPluginManager().registerEvents(new AttributeListener(), this);
         Bukkit.getPluginManager().registerEvents(new GUIListener(), this);
