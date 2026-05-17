@@ -1,33 +1,54 @@
 package cc.ranmc.online.util;
 
 import cc.ranmc.online.bean.InputCallback;
-import lombok.Getter;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TranslatableComponent;
-import net.md_5.bungee.api.chat.TextComponent;
+import io.papermc.paper.dialog.Dialog;
+import io.papermc.paper.registry.data.dialog.ActionButton;
+import io.papermc.paper.registry.data.dialog.DialogBase;
+import io.papermc.paper.registry.data.dialog.action.DialogAction;
+import io.papermc.paper.registry.data.dialog.body.DialogBody;
+import io.papermc.paper.registry.data.dialog.input.DialogInput;
+import io.papermc.paper.registry.data.dialog.type.DialogType;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickCallback;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import static cc.ranmc.online.util.BasicUtil.color;
 
 public class InputUtil {
 
-    @Getter
-    private static final Map<String, InputCallback> inputMap = new HashMap<>();
+    public static void open(Player player, String title, String text, InputCallback callback) {
+        open(player, title, text, "", callback);
+    }
 
-    public static void open(Player player, String text, InputCallback callback) {
-        TranslatableComponent textComponent = new TranslatableComponent(color("&a请打开输入框输入&e" + text));
-        textComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("请在聊天框输入" + text).create()));
-        TextComponent cancelBtn = new TextComponent(color(" &c[取消]"));
-        cancelBtn.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("点击取消输入状态").create()));
-        cancelBtn.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/cancelinput"));
-        textComponent.addExtra(cancelBtn);
-        player.spigot().sendMessage(textComponent);
-        inputMap.put(player.getName(), callback);
-        player.closeInventory();
+    public static void open(Player player, String title, String text, String initial, InputCallback callback) {
+        player.showDialog(Dialog.create(builder -> builder
+                .empty()
+                .base(DialogBase.builder(Component.text(""))
+                        .canCloseWithEscape(true)
+                        .body(List.of(
+                                DialogBody.plainMessage(Component.text(color(title)))
+                        ))
+                        .inputs(List.of(
+                                DialogInput
+                                        .text("text", Component.text(text))
+                                        .initial(initial)
+                                        .maxLength(99)
+                                        .build()
+                        )).build()
+                )
+                .type(DialogType.confirmation(
+                        ActionButton.builder(Component.text("取消")).build(),
+                        ActionButton.builder(Component.text("确认"))
+                                .action(DialogAction.customClick((response, _) -> {
+                                    String inputText = response.getText("text");
+                                    if (inputText == null || inputText.isEmpty()) {
+                                        player.sendMessage(color("&c输入的内容不能为空"));
+                                        return;
+                                    }
+                                    callback.onCallback(inputText);
+                                }, ClickCallback.Options.builder().lifetime(ClickCallback.DEFAULT_LIFETIME).build())).build()
+                ))));
     }
 }

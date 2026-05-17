@@ -42,10 +42,6 @@ commands:
     description: attribute
     usage: /<command>
 
-  cancelinput:
-    description: cancelinput
-    usage: /<command>
-
   name:
     description: name
     usage: /<command>

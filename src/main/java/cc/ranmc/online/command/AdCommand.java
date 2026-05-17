@@ -19,9 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.chrono.ChronoLocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,39 +68,39 @@ public class AdCommand implements CommandExecutor {
             }
 
             //打开宣传栏
-            int guisize = 9;
-            if(adList.isEmpty()) {
-                adList = new ArrayList<>();
-            } else if(adList.size() >= 36) {
-                guisize = 45;
-            } else if(adList.size() >= 27) {
-                guisize = 36;
-            } else if(adList.size() >= 18) {
-                guisize = 27;
-            } else if(adList.size() >= 9) {
-                guisize = 18;
-            }
-            Inventory inv = Bukkit.createInventory(null, guisize, color("&b&l领地宣传栏"));
+            Inventory inv = Bukkit.createInventory(null, 54, color("&b&l创世之境丨领地宣传栏"));
+            ItemStack pane = BasicUtil.getItem(Material.GRAY_STAINED_GLASS_PANE, 1, " ");
+            ItemStack close = BasicUtil.getItem(Material.RED_STAINED_GLASS_PANE, 1, "&b关闭菜单");
+            inv.setItem(45, close);
+            inv.setItem(46, pane);
+            inv.setItem(47, pane);
+            inv.setItem(48, pane);
+            inv.setItem(50, pane);
+            inv.setItem(51, pane);
+            inv.setItem(52, pane);
+            inv.setItem(53, close);
 
             ItemStack item10 = new ItemStack(Material.COMPASS);
             ItemMeta meta10 = item10.getItemMeta();
             meta10.setDisplayName(color("&b创建宣传栏"));
             ArrayList<String> lore1 = new ArrayList<>();
-            lore1.add(color("&e站在领地内，花费" + plugin.getConfig().getInt("ad-price") + "金币/周"));
+            lore1.add(color("&e花费" + plugin.getConfig().getInt("ad-price") + "金币/周"));
+            ClaimedResidence residence = ResidenceApi.getResidenceManager().getByLoc(player.getLocation());
+            lore1.add(color("&e当前所在领地&c" + (residence == null ? "暂无" : residence.getName())));
+            lore1.add(color("&9发布你的领地和介绍"));
             lore1.add(color("&9发布你的领地和介绍"));
             lore1.add(color("&9让更多人了解和向往"));
             lore1.add(color("&9请勿发布辱骂等信息"));
             lore1.add(color("&9一经发现将封禁处理"));
             meta10.setLore(lore1);
             item10.setItemMeta(meta10);
-
-            inv.setItem(0, item10);
+            inv.setItem(49, item10);
 
             for (int i = 0; i < adList.size(); i++) {
                 String[] resinfo = adList.get(i).split(" ");
                 ItemStack item = new ItemStack(Material.OAK_SIGN);
                 ItemMeta meta = item.getItemMeta();
-                meta.setDisplayName(color("&e领地：&c"+resinfo[0]));
+                meta.setDisplayName(color("&e领地：&c" + resinfo[0]));
                 ArrayList<String> lore2 = new ArrayList<>();
                 lore2.add(color("&e发布者：&c"+resinfo[1]));
                 lore2.add(color("&e到期日：&c"+resinfo[3]));
@@ -113,13 +111,12 @@ public class AdCommand implements CommandExecutor {
                 lore2.add(color("&b点击传送至领地"));
                 meta.setLore(lore2);
                 item.setItemMeta(meta);
-
-                inv.setItem(1 + i, item);
+                inv.setItem(i, item);
             }
 
             player.openInventory(inv);
         } else if (args.length == 1 && args[0].equalsIgnoreCase("create")) {
-            InputUtil.open(player, "领地介绍(空格换行)", result -> {
+            InputUtil.open(player, "创建宣传栏", "领地介绍(空格换行)", result -> {
                 // 创建宣传栏
                 Economy econ = plugin.getEcon();
                 int price = plugin.getConfig().getInt("ad-price");

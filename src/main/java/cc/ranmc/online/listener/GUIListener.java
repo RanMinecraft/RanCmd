@@ -31,7 +31,7 @@ public class GUIListener implements Listener {
         Player player = (Player) event.getWhoClicked();
         ItemStack clicked = event.getCurrentItem();
         Inventory inventory = event.getClickedInventory();
-        if (event.getView().getTitle().equalsIgnoreCase(color("&b&l领地宣传栏"))) {
+        if (event.getView().getTitle().equalsIgnoreCase(color("&b&l创世之境丨领地宣传栏"))) {
             event.setCancelled(true);
             if (clicked == null) return;
             if (clicked.getType().toString().endsWith("_SIGN")) {
@@ -39,8 +39,8 @@ public class GUIListener implements Listener {
                 String[] adInfo = plugin.getDataYml().getStringList("ad-list").get(event.getRawSlot()-1).split(" ");
                 player.chat("/res tp " + adInfo[0]);
             }
-            // 取消按钮
-            if (event.getRawSlot() == 0) player.chat("/ad create");
+            if (event.getRawSlot() == 45 || event.getRawSlot() == 53) player.closeInventory();
+            if (event.getRawSlot() == 49) player.chat("/ad create");
         }
 
         // 修复耐久 GUI
@@ -157,7 +157,7 @@ public class GUIListener implements Listener {
 
             }
             if (event.getRawSlot() == 2 && clicked.getType() == Material.OAK_SIGN) {
-                InputUtil.open(player, "定制物品名称", context ->
+                InputUtil.open(player, "定制物品名称", "物品名称", context ->
                         plugin.getFoliaLib().getScheduler().runLater(() ->
                                 CustomizeUtil.setItemName(player, context), 1));
             }

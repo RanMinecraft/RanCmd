@@ -19,14 +19,4 @@ public class PlayerListener implements Listener {
         }
     }
 
-    @EventHandler
-    public void onAsyncPlayerChatEvent(AsyncPlayerChatEvent event) {
-        Player player = event.getPlayer();
-        if (InputUtil.getInputMap().containsKey(player.getName())) {
-            InputUtil.getInputMap().get(player.getName()).onCallback(event.getMessage());
-            InputUtil.getInputMap().remove(player.getName());
-            event.setCancelled(true);
-        }
-    }
-
 }
