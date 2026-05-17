@@ -30,8 +30,8 @@ public class NameCommand implements CommandExecutor {
                     sender.sendMessage(color("&c该玩家不在线"));
                     return true;
                 }
-                plugin.getDataYml().set("itemname.count." + player.getName(),
-                        plugin.getDataYml().getInt("itemname.count." + player.getName(), 0) + 1);
+                plugin.getDataYml().set("item-name.count." + player.getName(),
+                        plugin.getDataYml().getInt("item-name.count." + player.getName(), 0) + 1);
                 try {
                     plugin.getDataYml().save(plugin.getDataFile());
                 } catch (IOException e) {

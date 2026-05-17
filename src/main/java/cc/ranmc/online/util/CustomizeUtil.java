@@ -24,9 +24,6 @@ public class CustomizeUtil {
         name = name.toLowerCase().replace(" ", "")
                 .replace("§", "")
                 .replace("&k", "")
-                .replace("&m", "")
-                .replace("&n", "")
-                .replace("&o", "")
                 .replace("&r", "");
         if (name.isEmpty()) {
             player.sendMessage(color("&c你没有输入任何内容"));
@@ -36,7 +33,7 @@ public class CustomizeUtil {
             player.sendMessage(color("&c你输入的名称不规范或过长"));
             return;
         }
-        plugin.getDataYml().set("itemname.name." + player.getName(), name);
+        plugin.getDataYml().set("item-namen.ame." + player.getName(), name);
         try {
             plugin.getDataYml().save(plugin.getDataFile());
         } catch (IOException e) {
@@ -51,15 +48,15 @@ public class CustomizeUtil {
         ItemMeta meta = item1.getItemMeta();
         meta.setDisplayName(color("&c确认更改"));
         List<String> lore = new ArrayList<>();
-        lore.add(color("&b拥有修改次数 &e" + plugin.getConfig().getInt("itemname.count." + player.getName(), 0)));
-        lore.add(color("&b价格： &a" + plugin.getConfig().getInt("item-name-price", 20) + " &b元/次"));
+        lore.add(color("&b拥有修改次数 &e" + plugin.getDataYml().getInt("item-name.count." + player.getName(), 0)));
+        lore.add(color("&b价格： &a" + plugin.getDataYml().getInt("item-name-price", 20) + " &b元/次"));
         lore.add(color("&b点击确认更改或打开充值"));
         meta.setLore(lore);
         item1.setItemMeta(meta);
 
         ItemStack item5 = new ItemStack(Material.OAK_SIGN);
         ItemMeta meta5 = item5.getItemMeta();
-        meta5.setDisplayName(rgbString(plugin.getDataYml().getString("itemname.name." + player.getName(), "&f物品名称")));
+        meta5.setDisplayName(rgbString(plugin.getDataYml().getString("item-namen.ame." + player.getName(), "&f物品名称")));
         List<String> lore5 = new ArrayList<>();
         lore5.add(color("&e点击输入物品名称"));
         meta5.setLore(addColorLore(lore5));

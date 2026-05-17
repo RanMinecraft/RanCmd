@@ -108,7 +108,7 @@ public class AdCommand implements CommandExecutor {
                 lore2.add(color("&e到期日：&c"+resinfo[3]));
                 lore2.add(color("&e介绍描述："));
                 for (String line : resinfo[2].split("%n")) {
-                    lore2.add(color(line));
+                    lore2.add(color("&a" + line));
                 }
                 lore2.add(color("&b点击传送至领地"));
                 meta.setLore(lore2);

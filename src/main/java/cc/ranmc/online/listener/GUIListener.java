@@ -121,7 +121,7 @@ public class GUIListener implements Listener {
                 player.closeInventory();
             }
             if (event.getRawSlot() == 6 && clicked.getType() == Material.ANVIL) {
-                int count = plugin.getDataYml().getInt("itemname.count." + player.getName());
+                int count = plugin.getDataYml().getInt("item-name.count." + player.getName());
                 if (count <= 0) {
                     player.chat(plugin.getConfig().getString("item-name-command", "/mp buy 定制物品名称"));
                     return;
@@ -140,10 +140,10 @@ public class GUIListener implements Listener {
                         return;
                     }
                     ItemMeta meta = item.getItemMeta();
-                    meta.setDisplayName(rgbString(plugin.getDataYml().getString("itemname.name." + player.getName(), "&f物品名称")));
+                    meta.setDisplayName(rgbString(plugin.getDataYml().getString("item-namen.ame." + player.getName(), "&f物品名称")));
                     item.setItemMeta(meta);
                     count--;
-                    plugin.getDataYml().set("itemname.count." + player.getName(), count);
+                    plugin.getDataYml().set("item-name.count." + player.getName(), count);
                     try {
                         plugin.getDataYml().save(plugin.getDataFile());
                     } catch (IOException e) {
@@ -157,7 +157,9 @@ public class GUIListener implements Listener {
 
             }
             if (event.getRawSlot() == 2 && clicked.getType() == Material.OAK_SIGN) {
-                InputUtil.open(player, "定制物品名称", context -> CustomizeUtil.setItemName(player, context));
+                InputUtil.open(player, "定制物品名称", context ->
+                        plugin.getFoliaLib().getScheduler().runLater(() ->
+                                CustomizeUtil.setItemName(player, context), 1));
             }
         }
     }
