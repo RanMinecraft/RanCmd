@@ -111,6 +111,7 @@ public class GUIListener implements Listener {
 
     //关闭背包事件
     private static final List<String> returnItemInvList = Arrays.asList(
+            color("&b&l创世之境丨定制物品名称"),
             color("&b&l创世之境丨装备强化"),
             color("&b&l创世之境丨修复物品"),
             color("&b&l创世之境丨清除属性"),
