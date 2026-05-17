@@ -16,8 +16,7 @@ public class AdTabComplete implements TabCompleter {
                                       @NotNull Command command,
                                       @NotNull String alias,
                                       String @NonNull [] args) {
-        if (args.length == 1) return List.of("领地名");
-        if (args.length == 2) return List.of("介绍(\\n换行)");
+        if (args.length == 1) return List.of("create", "gui");
         return new ArrayList<>();
     }
 

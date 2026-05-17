@@ -29,7 +29,7 @@ public class UpgradeUtil {
      */
     public static void clearItem(Player player, ItemStack item) {
         if (item == null) {
-            player.sendMessage(PREFIX + color("&c请先放入物品"));
+            player.sendMessage(color("&c请先放入物品"));
             return;
         }
         ItemMeta meta = item.getItemMeta();
@@ -38,15 +38,15 @@ public class UpgradeUtil {
         List<String> lores =  item.getItemMeta().getLore();
 
         if (lores == null || lores.getFirst().contains(UPGRADE_PREFIX + " 0 / ")) {
-            player.sendMessage(PREFIX + color("&c该物品没有任何属性"));
+            player.sendMessage(color("&c该物品没有任何属性"));
             return;
         }
         if (item.getAmount() != 1) {
-            player.sendMessage(PREFIX + color("&c物品数量必须为1"));
+            player.sendMessage(color("&c物品数量必须为1"));
             return;
         }
         if (money < price) {
-            player.sendMessage(PREFIX + color("&c你没有足够的金币"));
+            player.sendMessage(color("&c你没有足够的金币"));
             return;
         }
         plugin.getEcon().withdrawPlayer(player, price);
@@ -56,7 +56,7 @@ public class UpgradeUtil {
         }
         meta.setLore(newLores);
         item.setItemMeta(meta);
-        player.sendMessage(PREFIX + color("&a清除成功,请取回物品"));
+        player.sendMessage(color("&a清除成功,请取回物品"));
     }
 
     /**
@@ -64,7 +64,7 @@ public class UpgradeUtil {
      */
     public static void fixItem(Player player, ItemStack item) {
         if (item == null) {
-            player.sendMessage(PREFIX + color("&c请先放入物品"));
+            player.sendMessage(color("&c请先放入物品"));
             return;
         }
         ItemMeta meta = item.getItemMeta();
@@ -73,11 +73,11 @@ public class UpgradeUtil {
         if (player.hasPermission("roa.vip")) price = 0;
         List<String> lore =  meta.getLore();
         if (item.getAmount() != 1) {
-            player.sendMessage(PREFIX + color("&c物品数量必须为1"));
+            player.sendMessage(color("&c物品数量必须为1"));
             return;
         }
         if (money < price) {
-            player.sendMessage(PREFIX + color("&c你没有足够的金币"));
+            player.sendMessage(color("&c你没有足够的金币"));
             return;
         }
         plugin.getEcon().withdrawPlayer(player, price);
@@ -92,7 +92,7 @@ public class UpgradeUtil {
         meta.setLore(lore);
         ((Damageable) meta).setDamage(0);
         item.setItemMeta(meta);
-        player.sendMessage(PREFIX + color("&a修复成功,请取回物品"));
+        player.sendMessage(color("&a修复成功,请取回物品"));
     }
 
     /**
@@ -134,7 +134,7 @@ public class UpgradeUtil {
                     "&9修复物品耐久度"));
             ItemStack item = inventory.getItem(4);
             if (item == null) {
-                player.sendMessage(PREFIX + color("&c请先放入物品"));
+                player.sendMessage(color("&c请先放入物品"));
             } else {
                 fixItem(player, item);
             }
@@ -186,7 +186,7 @@ public class UpgradeUtil {
                     "&9请慎重使用该功能"));
             ItemStack item = inventory.getItem(4);
             if (item == null) {
-                player.sendMessage(PREFIX + color("&c请先放入物品"));
+                player.sendMessage(color("&c请先放入物品"));
             } else {
                 clearItem(player, item);
             }
@@ -239,7 +239,7 @@ public class UpgradeUtil {
                     "&9将获得随机属性"));
             ItemStack item = inventory.getItem(4);
             if (item == null) {
-                player.sendMessage(PREFIX + color("&c请先放入物品"));
+                player.sendMessage(color("&c请先放入物品"));
             } else {
                 gradeItem(player, item, false);
             }
@@ -290,7 +290,7 @@ public class UpgradeUtil {
                     "&9将获得随机属性"));
             ItemStack item = inventory.getItem(4);
             if (item == null) {
-                player.sendMessage(PREFIX + color("&c请先放入物品"));
+                player.sendMessage(color("&c请先放入物品"));
             } else {
                 gradeItem(player, item, true);
             }
@@ -320,30 +320,30 @@ public class UpgradeUtil {
                 }
             }
             if (cannot) {
-                player.sendMessage(PREFIX + color("&c你不能强化该物品"));
+                player.sendMessage(color("&c你不能强化该物品"));
                 return;
             }
         }
         if (item.getType() == Material.WRITABLE_BOOK || item.getType() == Material.WRITTEN_BOOK) {
-            player.sendMessage(PREFIX + color("&c书籍不能被强化"));
+            player.sendMessage(color("&c书籍不能被强化"));
             return;
         }
         if (item.getType() == Material.FILLED_MAP || item.getType() == Material.MAP) {
-            player.sendMessage(PREFIX + color("&c地图不能被强化"));
+            player.sendMessage(color("&c地图不能被强化"));
             return;
         }
         if (item.getType().toString().contains("BANNER")) {
-            player.sendMessage(PREFIX + color("&c旗帜不能被强化"));
+            player.sendMessage(color("&c旗帜不能被强化"));
             return;
         }
         if (item.getAmount() != 1) {
-            player.sendMessage(PREFIX + color("&c物品数量必须为1"));
+            player.sendMessage(color("&c物品数量必须为1"));
             return;
         }
         int gradeNum = Integer.parseInt(lores.get(info).split(" ")[1]);
         int maxNum = Integer.parseInt(lores.get(info).split(" ")[3]);
         if (gradeNum >= plugin.getConfig().getInt("max-upgrade-count")) {
-            player.sendMessage(PREFIX + color("&c已达最大强化上限:" + plugin.getConfig().getInt("max-upgrade-count")));
+            player.sendMessage(color("&c已达最大强化上限:" + plugin.getConfig().getInt("max-upgrade-count")));
             return;
         }
         int count = 1;
@@ -352,14 +352,14 @@ public class UpgradeUtil {
         }
         price *= count;
         if (money < price) {
-            player.sendMessage(PREFIX + color("&c你没有足够的金币"));
+            player.sendMessage(color("&c你没有足够的金币"));
             return;
         }
         if (!quick && gradeNum >= maxNum) {
             if (TearUtil.cost(player)) {
                 maxNum++;
             } else {
-                player.sendMessage(PREFIX + color("&c你没有持有龙泪"));
+                player.sendMessage(color("&c你没有持有龙泪"));
                 return;
             }
         }
@@ -372,7 +372,7 @@ public class UpgradeUtil {
         }
         meta.setLore(lores);
         item.setItemMeta(meta);
-        player.sendMessage(PREFIX + color("&a" + (quick ? "快速" : "") + "强化成功,请取回物品"));
+        player.sendMessage(color("&a" + (quick ? "快速" : "") + "强化成功,请取回物品"));
     }
 
     /**

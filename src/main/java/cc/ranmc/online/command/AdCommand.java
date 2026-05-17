@@ -2,6 +2,7 @@ package cc.ranmc.online.command;
 
 import cc.ranmc.online.Main;
 import cc.ranmc.online.util.BasicUtil;
+import cc.ranmc.online.util.InputUtil;
 import com.bekvon.bukkit.residence.api.ResidenceApi;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import net.milkbowl.vault.economy.Economy;
@@ -19,6 +20,7 @@ import org.jspecify.annotations.NonNull;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,18 +48,13 @@ public class AdCommand implements CommandExecutor {
             return true;
         }
 
-        if (args.length == 0) {
+        if (args.length == 1 && args[0].equalsIgnoreCase("gui")) {
             // 打开宣传栏
             List<String> adList = new ArrayList<>();
-            LocalDate dt = LocalDate.now();
             List<String> outdatedList = plugin.getConfig().getStringList("ad-list");
             for (String string : outdatedList) {
-                String[] endtime = string.split(" ")[3].split("-");
-                if (dt.getYear() < Integer.parseInt(endtime[0])) {
-                    adList.add(string);
-                } else if (dt.getYear() == Integer.parseInt(endtime[0]) && dt.getMonthValue() < Integer.parseInt(endtime[1])) {
-                    adList.add(string);
-                } else if (dt.getYear() == Integer.parseInt(endtime[0]) && dt.getMonthValue() == Integer.parseInt(endtime[1]) && dt.getDayOfMonth() < Integer.parseInt(endtime[2])) {
+                LocalDateTime endtime = BasicUtil.getDate(string.split(" ")[3]);
+                if (LocalDateTime.now().isBefore(endtime)) {
                     adList.add(string);
                 }
             }
@@ -84,10 +81,9 @@ public class AdCommand implements CommandExecutor {
 
             ItemStack item10 = new ItemStack(Material.COMPASS);
             ItemMeta meta10 = item10.getItemMeta();
-            meta10.setDisplayName(color("&b宣传栏"));
+            meta10.setDisplayName(color("&b创建宣传栏"));
             ArrayList<String> lore1 = new ArrayList<>();
-            lore1.add(color("&e/ad 领地 介绍"));
-            lore1.add(color("&e花费" + plugin.getConfig().getInt("ad-price") + "金币/周"));
+            lore1.add(color("&e站在领地内，花费" + plugin.getConfig().getInt("ad-price") + "金币/周"));
             lore1.add(color("&9发布你的领地和介绍"));
             lore1.add(color("&9让更多人了解和向往"));
             lore1.add(color("&9请勿发布辱骂等信息"));
@@ -106,7 +102,7 @@ public class AdCommand implements CommandExecutor {
                 lore2.add(color("&e发布者：&c"+resinfo[1]));
                 lore2.add(color("&e到期日：&c"+resinfo[3]));
                 lore2.add(color("&e介绍描述："));
-                for (String line : resinfo[2].split("\\\\n")) {
+                for (String line : resinfo[2].split("%n")) {
                     lore2.add(color(line));
                 }
                 lore2.add(color("&b点击传送至领地"));
@@ -117,37 +113,38 @@ public class AdCommand implements CommandExecutor {
             }
 
             player.openInventory(inv);
-        } else {
-            // 创建宣传栏
-            Economy econ = plugin.getEcon();
-            int price = plugin.getConfig().getInt("ad-price");
-            if (econ.getBalance(player) < price) {
-                sender.sendMessage(color("&c你的金币不足"));
-                return true;
-            }
-            List<String> adlist = plugin.getConfig().getStringList("ad-list");
-            if (adlist.size() >= 44) {
-                sender.sendMessage(color("&c当前宣传栏已满,明天再来吧"));
-                return true;
-            }
-            LocalDateTime dt = LocalDateTime.now();
-            LocalDateTime endtime = dt.plusDays(7);
+        } else if (args.length == 1 && args[0].equalsIgnoreCase("create")) {
+            InputUtil.open(player, "领地介绍(空格换行)", result -> {
+                // 创建宣传栏
+                Economy econ = plugin.getEcon();
+                int price = plugin.getConfig().getInt("ad-price");
+                if (econ.getBalance(player) < price) {
+                    sender.sendMessage(color("&c你的金币不足"));
+                    return;
+                }
+                List<String> adlist = plugin.getConfig().getStringList("ad-list");
+                if (adlist.size() >= 44) {
+                    sender.sendMessage(color("&c当前宣传栏已满,明天再来吧"));
+                    return;
+                }
+                LocalDateTime dt = LocalDateTime.now();
+                LocalDateTime endtime = dt.plusDays(7);
 
-            ClaimedResidence residence = ResidenceApi.getResidenceManager().getByName(args[0]);
-            if (residence == null) {
-                sender.sendMessage(color("&c该领地不存在"));
-                return true;
-            }
-            if (args[1].length() > plugin.getConfig().getInt("ad-length", 16)) {
-                sender.sendMessage(color("&c介绍字数过长"));
-                return true;
-            }
-            adlist.add(args[0]+" " + player.getName() + " " + args[1] + " "+
-                    endtime.getYear()+"-"+endtime.getMonthValue()+"-"+endtime.getDayOfMonth());
-            plugin.getConfig().set("ad-list", adlist);
-            plugin.saveConfig();
-            econ.withdrawPlayer(player, price);
-            sender.sendMessage(color("&a创建成功,快打开宣传栏查看吧"));
+                ClaimedResidence residence = ResidenceApi.getResidenceManager().getByLoc(player.getLocation());
+                if (residence == null) {
+                    sender.sendMessage(color("&c请站在领地内再创建"));
+                    return;
+                }
+                if (result.length() > plugin.getConfig().getInt("ad-length", 16)) {
+                    sender.sendMessage(color("&c介绍字数过长"));
+                    return;
+                }
+                adlist.add(args[0] + " " + player.getName() + " " + result.replace(" ", "%n") + " " + BasicUtil.getDate(endtime));
+                plugin.getConfig().set("ad-list", adlist);
+                plugin.saveConfig();
+                econ.withdrawPlayer(player, price);
+                sender.sendMessage(color("&a创建成功,快打开宣传栏查看吧"));
+            });
         }
         return true;
     }

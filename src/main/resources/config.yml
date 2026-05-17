@@ -19,3 +19,10 @@ fix-item-price: 2000
 
 # 开启强化属性
 enable-attribute: false
+
+# 定制物品名字价格
+item-name-price: 20
+# 定制物品名字限制长度
+item-name-max-length: 6
+# 定制物品名字次数不足执行指令
+item-name-command: "/mp buy 定制物品名称"

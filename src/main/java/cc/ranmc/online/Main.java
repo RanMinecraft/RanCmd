@@ -4,6 +4,7 @@ import cc.ranmc.online.command.AdCommand;
 import cc.ranmc.online.command.AdTabComplete;
 import cc.ranmc.online.command.AttributeCommand;
 import cc.ranmc.online.command.AttributeTabComplete;
+import cc.ranmc.online.command.CancelInputCommand;
 import cc.ranmc.online.command.MainCommand;
 import cc.ranmc.online.command.MainTabComplete;
 import cc.ranmc.online.command.VaiCommand;
@@ -21,6 +22,7 @@ import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -37,7 +39,10 @@ public class Main extends JavaPlugin {
     private static Javalin javalin;
     @Getter
     private static Main instance;
-    //经济插件
+    @Getter
+    private File dataFile;
+    @Getter
+    private YamlConfiguration dataYml;
     @Getter
     private Economy econ;
     @Getter
@@ -62,6 +67,10 @@ public class Main extends JavaPlugin {
         }
         reloadConfig();
 
+        dataFile = new File(getDataFolder(), "data.yml");
+        if (!dataFile.exists()) saveResource("data.yml", false);
+        dataYml = YamlConfiguration.loadConfiguration(dataFile);
+
         // 注册指令
         PluginCommand mainCmd = Bukkit.getPluginCommand("roa");
         Objects.requireNonNull(mainCmd).setExecutor(new MainCommand());
@@ -77,6 +86,9 @@ public class Main extends JavaPlugin {
         PluginCommand attributeCmd = Bukkit.getPluginCommand("attribute");
         Objects.requireNonNull(attributeCmd).setExecutor(new AttributeCommand());
         attributeCmd.setTabCompleter(new AttributeTabComplete());
+
+        PluginCommand cancelInputCmd = Bukkit.getPluginCommand("cancelinput");
+        Objects.requireNonNull(cancelInputCmd).setExecutor(new CancelInputCommand());
 
         Bukkit.getPluginManager().registerEvents(new AttributeListener(), this);
         Bukkit.getPluginManager().registerEvents(new GUIListener(), this);

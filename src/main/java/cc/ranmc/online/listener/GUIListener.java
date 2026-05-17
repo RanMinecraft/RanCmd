@@ -2,6 +2,8 @@ package cc.ranmc.online.listener;
 
 import cc.ranmc.online.Main;
 import cc.ranmc.online.util.BasicUtil;
+import cc.ranmc.online.util.CustomizeUtil;
+import cc.ranmc.online.util.InputUtil;
 import cc.ranmc.online.util.UpgradeUtil;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -11,11 +13,14 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
 import static cc.ranmc.online.util.BasicUtil.color;
+import static cc.ranmc.online.util.BasicUtil.rgbString;
 
 public class GUIListener implements Listener {
 
@@ -35,9 +40,7 @@ public class GUIListener implements Listener {
                 player.chat("/res tp " + adInfo[0]);
             }
             // 取消按钮
-            if (event.getRawSlot() == 0) {
-                player.closeInventory();
-            }
+            if (event.getRawSlot() == 0) player.chat("/ad create");
         }
 
         // 修复耐久 GUI
@@ -105,6 +108,56 @@ public class GUIListener implements Listener {
             // 取消按钮
             if (event.getRawSlot() == 2 && clicked.getType() == Material.RED_STAINED_GLASS_PANE) {
                 player.closeInventory();
+            }
+        }
+
+        // 定制物品名称
+        if (event.getView().getTitle().equalsIgnoreCase(color("&b&l创世之境丨定制物品名称"))) {
+            if (event.getRawSlot() != 4 && inventory != player.getInventory()) {
+                event.setCancelled(true);
+            }
+            if (clicked == null || inventory == null) return;
+            if ((event.getRawSlot() == 2 || event.getRawSlot() == 6) && clicked.getType() == Material.RED_STAINED_GLASS_PANE) {
+                player.closeInventory();
+            }
+            if (event.getRawSlot() == 6 && clicked.getType() == Material.ANVIL) {
+                int count = plugin.getDataYml().getInt("itemname.count." + player.getName());
+                if (count <= 0) {
+                    player.chat(plugin.getConfig().getString("item-name-command", "/mp buy 定制物品名称"));
+                    return;
+                } else {
+                    ItemStack item = inventory.getItem(4);
+                    if (item == null) {
+                        player.sendMessage(color("&c请先放入物品"));
+                        return;
+                    }
+                    if (Material.NAME_TAG == item.getType()) {
+                        player.sendMessage(color("&c不能修改命名牌,请放入铁砧修改"));
+                        return;
+                    }
+                    if (item.getAmount() != 1) {
+                        player.sendMessage(color("&c物品数量必须为1"));
+                        return;
+                    }
+                    ItemMeta meta = item.getItemMeta();
+                    meta.setDisplayName(rgbString(plugin.getDataYml().getString("itemname.name." + player.getName(), "&f物品名称")));
+                    item.setItemMeta(meta);
+                    count--;
+                    plugin.getDataYml().set("itemname.count." + player.getName(), count);
+                    try {
+                        plugin.getDataYml().save(plugin.getDataFile());
+                    } catch (IOException e) {
+                        player.sendMessage(color("&c保存数据错误，请联系管理员：" + e.getMessage()));
+                    }
+                    player.sendMessage(color("&a更改成功,请取回物品"));
+                    ItemStack pane = BasicUtil.getItem(Material.RED_STAINED_GLASS_PANE, 1, "&c关闭菜单");
+                    inventory.setItem(2, pane);
+                    inventory.setItem(6, pane);
+                }
+
+            }
+            if (event.getRawSlot() == 2 && clicked.getType() == Material.OAK_SIGN) {
+                InputUtil.open(player, "定制物品名称", context -> CustomizeUtil.setItemName(player, context));
             }
         }
     }
