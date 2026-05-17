@@ -36,7 +36,7 @@ public class GUIListener implements Listener {
             if (clicked == null) return;
             if (clicked.getType().toString().endsWith("_SIGN")) {
                 player.closeInventory();
-                String[] adInfo = plugin.getConfig().getStringList("ad-list").get(event.getRawSlot()-1).split(" ");
+                String[] adInfo = plugin.getDataYml().getStringList("ad-list").get(event.getRawSlot()-1).split(" ");
                 player.chat("/res tp " + adInfo[0]);
             }
             // 取消按钮

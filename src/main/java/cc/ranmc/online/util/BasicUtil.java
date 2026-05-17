@@ -10,6 +10,7 @@ import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -80,7 +81,8 @@ public class BasicUtil {
      * 公屏信息
      */
     public static LocalDateTime getDate(String time) {
-        return LocalDateTime.parse(time, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        LocalDate date = LocalDate.parse(time, DateTimeFormatter.ofPattern("yyyy-M-d"));
+        return date.atStartOfDay();
     }
 
     public static String getDate(LocalDateTime time) {

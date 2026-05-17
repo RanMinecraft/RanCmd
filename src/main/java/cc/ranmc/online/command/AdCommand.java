@@ -18,6 +18,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDate;
@@ -48,10 +49,10 @@ public class AdCommand implements CommandExecutor {
             return true;
         }
 
-        if (args.length == 1 && args[0].equalsIgnoreCase("gui")) {
+        if (args.length == 0 || (args.length == 1 && args[0].equalsIgnoreCase("gui"))) {
             // 打开宣传栏
             List<String> adList = new ArrayList<>();
-            List<String> outdatedList = plugin.getConfig().getStringList("ad-list");
+            List<String> outdatedList = plugin.getDataYml().getStringList("ad-list");
             for (String string : outdatedList) {
                 LocalDateTime endtime = BasicUtil.getDate(string.split(" ")[3]);
                 if (LocalDateTime.now().isBefore(endtime)) {
@@ -60,8 +61,12 @@ public class AdCommand implements CommandExecutor {
             }
 
             if (adList.size()<outdatedList.size()) {
-                plugin.getConfig().set("ad-list", adList);
-                plugin.saveConfig();
+                plugin.getDataYml().set("ad-list", adList);
+                try {
+                    plugin.getDataYml().save(plugin.getDataFile());
+                } catch (IOException e) {
+                    player.sendMessage(color("&c保存数据错误，请联系管理员：" + e.getMessage()));
+                }
             }
 
             //打开宣传栏
@@ -122,7 +127,7 @@ public class AdCommand implements CommandExecutor {
                     sender.sendMessage(color("&c你的金币不足"));
                     return;
                 }
-                List<String> adlist = plugin.getConfig().getStringList("ad-list");
+                List<String> adlist = plugin.getDataYml().getStringList("ad-list");
                 if (adlist.size() >= 44) {
                     sender.sendMessage(color("&c当前宣传栏已满,明天再来吧"));
                     return;
@@ -140,8 +145,12 @@ public class AdCommand implements CommandExecutor {
                     return;
                 }
                 adlist.add(args[0] + " " + player.getName() + " " + result.replace(" ", "%n") + " " + BasicUtil.getDate(endtime));
-                plugin.getConfig().set("ad-list", adlist);
-                plugin.saveConfig();
+                plugin.getDataYml().set("ad-list", adlist);
+                try {
+                    plugin.getDataYml().save(plugin.getDataFile());
+                } catch (IOException e) {
+                    player.sendMessage(color("&c保存数据错误，请联系管理员：" + e.getMessage()));
+                }
                 econ.withdrawPlayer(player, price);
                 sender.sendMessage(color("&a创建成功,快打开宣传栏查看吧"));
             });
