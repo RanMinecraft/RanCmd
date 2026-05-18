@@ -88,7 +88,6 @@ public class AdCommand implements CommandExecutor {
             ClaimedResidence residence = ResidenceApi.getResidenceManager().getByLoc(player.getLocation());
             lore1.add(color("&e当前所在领地&c" + (residence == null ? "暂无" : residence.getName())));
             lore1.add(color("&9发布你的领地和介绍"));
-            lore1.add(color("&9发布你的领地和介绍"));
             lore1.add(color("&9让更多人了解和向往"));
             lore1.add(color("&9请勿发布辱骂等信息"));
             lore1.add(color("&9一经发现将封禁处理"));
