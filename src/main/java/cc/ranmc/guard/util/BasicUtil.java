@@ -9,7 +9,8 @@ public class BasicUtil {
      * 执行指令
      */
     public static void run(String command) {
-        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.getInstance(), () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command));
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.getInstance(), () ->
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command));
     }
 
     /**
