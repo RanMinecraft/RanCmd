@@ -6,6 +6,7 @@ author: Ranica
 api-version: "21.1"
 softdepend: [Ranmc]
 version: ${project.version}
+folia-supported: true
 
 permissions:
   rg.user:
