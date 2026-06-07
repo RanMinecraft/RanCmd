@@ -1,17 +1,8 @@
 package cc.ranmc.guard.util;
 
-import cc.ranmc.guard.Main;
 import org.bukkit.Bukkit;
 
 public class BasicUtil {
-
-    /**
-     * 执行指令
-     */
-    public static void run(String command) {
-        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.getInstance(), () ->
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command));
-    }
 
     /**
      * 文本颜色

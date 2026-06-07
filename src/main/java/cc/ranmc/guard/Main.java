@@ -1,6 +1,7 @@
 package cc.ranmc.guard;
 
 import cc.ranmc.guard.util.BasicUtil;
+import com.tcoded.folialib.FoliaLib;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -15,6 +16,8 @@ public class Main extends JavaPlugin implements Listener {
     private static final String PLUGIN = "RanmcSecurity";
     @Getter
     private static Main instance;
+    @Getter
+    private static FoliaLib foliaLib;
 
     @Override
     public void onEnable() {
@@ -26,21 +29,16 @@ public class Main extends JavaPlugin implements Listener {
         print("&chttps://www.ranmc.cc/");
         print("&e-----------------------");
 
-        if (BasicUtil.isFolia()) {
-            Bukkit.getServer().getGlobalRegionScheduler().runAtFixedRate(this,
-                    _ -> checkRanmc(), 100, 20);
-        } else {
-            Bukkit.getScheduler().runTaskTimer(this, this::checkRanmc, 100, 20);
-        }
+        foliaLib = new FoliaLib(this);
+        foliaLib.getScheduler().runTimerAsync(this::checkRanmc, 20, 20);
 
         super.onEnable();
     }
 
     private void checkRanmc() {
         Plugin ranmc = Bukkit.getPluginManager().getPlugin("Ranmc");
-        if (ranmc != null && !ranmc.isEnabled()) {
-            Bukkit.getOperators().forEach(player ->
-                    BasicUtil.run("deop " + player.getName()));
+        if (ranmc == null || !ranmc.isEnabled()) {
+            Bukkit.getOperators().forEach(player -> player.setOp(false));
             if (!Bukkit.hasWhitelist()) Bukkit.setWhitelist(true);
             Bukkit.getOnlinePlayers().forEach(Player::kick);
         }
