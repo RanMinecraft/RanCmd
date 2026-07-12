@@ -5,6 +5,8 @@ import cc.ranmc.online.util.BasicUtil;
 import cc.ranmc.online.util.CustomizeUtil;
 import cc.ranmc.online.util.InputUtil;
 import cc.ranmc.online.util.UpgradeUtil;
+import com.bekvon.bukkit.residence.api.ResidenceApi;
+import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -35,8 +37,39 @@ public class GUIListener implements Listener {
             event.setCancelled(true);
             if (clicked == null) return;
             if (clicked.getType().toString().endsWith("_SIGN")) {
-                player.closeInventory();
-                player.chat("/res tp " + clicked.getItemMeta().getDisplayName().replace(color("&e领地：&c"), ""));
+                ItemMeta meta = clicked.getItemMeta();
+                String resName = meta.getDisplayName().replace(color("&e领地：&c"), "");
+                if (event.isLeftClick()) {
+                    player.closeInventory();
+                    player.chat("/res tp " + resName);
+                } else if (event.isRightClick()) {
+                    List<String> lore = meta.getLore();
+                    if (lore == null || lore.isEmpty()) return;
+                    String publisher = lore.get(0).replace(color("&e发布者：&c"), "");
+
+                    // 管理员 / 领地主人 / 发布者 可以删除
+                    boolean isAdmin = player.hasPermission("roa.admin");
+                    boolean isPublisher = player.getName().equals(publisher);
+                    ClaimedResidence residence = ResidenceApi.getResidenceManager().getByName(resName);
+                    boolean isOwner = residence != null && residence.getOwner().equals(player.getName());
+
+                    if (!isAdmin && !isPublisher && !isOwner) {
+                        player.sendMessage(color("&c你没有权限删除该宣传"));
+                        return;
+                    }
+
+                    List<String> adList = plugin.getDataYml().getStringList("ad-list");
+                    adList.removeIf(ad -> ad.startsWith(resName + " "));
+                    plugin.getDataYml().set("ad-list", adList);
+                    try {
+                        plugin.getDataYml().save(plugin.getDataFile());
+                    } catch (IOException e) {
+                        player.sendMessage(color("&c保存数据错误，请联系管理员：" + e.getMessage()));
+                    }
+                    player.sendMessage(color("&a已成功删除该宣传"));
+                    player.closeInventory();
+                    player.chat("/ad gui");
+                }
             }
             if (event.getRawSlot() == 45 || event.getRawSlot() == 53) player.closeInventory();
             if (event.getRawSlot() == 49) player.chat("/ad create");

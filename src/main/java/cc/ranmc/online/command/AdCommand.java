@@ -107,7 +107,8 @@ public class AdCommand implements CommandExecutor {
                 for (String line : resinfo[2].split("%n")) {
                     lore2.add(color("&a" + line));
                 }
-                lore2.add(color("&b点击传送至领地"));
+                lore2.add(color("&b左键传送至领地"));
+                lore2.add(color("&b右键删除该宣传"));
                 meta.setLore(lore2);
                 item.setItemMeta(meta);
                 inv.setItem(i, item);
