@@ -29,42 +29,9 @@
 | `rancmd.admin` | OP | 允许使用所有 `/rancmd` 子指令 |
 | `rancmd.user` | 所有人 | (预留) |
 
-## 安装
-
-1. 从 [Releases](https://www.ranmc.cc/) 下载最新版本的 `RanCmd.jar`
-2. 将 `RanCmd.jar` 放入服务端的 `plugins/` 目录
-3. 重启服务器或使用 `/reload` 加载插件
-4. 享受使用 🎉
-
-## 构建
-
-### 前置要求
-
-- JDK 26+
-- Maven 3.8+
-
-### 构建步骤
-
-```bash
-git clone https://github.com/your-username/RanCmd.git
-cd RanCmd
-mvn clean install
-```
-
-构建产物会自动输出到 `~/Desktop/Paper/plugins/` 目录（本地测试服务器目录）。
-
-## 配置文件
-
-`config.yml`：
-
-```yaml
-# 无需配置
-```
-
-插件**开箱即用**，无需任何配置。
-
 ## 兼容性
 
+- JDK 26 +
 - Minecraft 1.13+（API 版本）
 - 支持 Paper、Spigot、Purpur 等下游服务端
 
