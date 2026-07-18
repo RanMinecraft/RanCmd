@@ -7,18 +7,18 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import static cc.ranmc.rancmd.Main.PREFIX;
 import static cc.ranmc.rancmd.util.BasicUtil.color;
-import static cc.ranmc.rancmd.util.BasicUtil.print;
 
 public class MainCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender,
-                             Command cmd,
+                             @NonNull Command cmd,
                              @NotNull String label,
-                             String[] args) {
+                             String @NonNull [] args) {
 
 
         if (!sender.hasPermission("rancmd.admin")) {
